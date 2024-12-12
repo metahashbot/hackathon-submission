@@ -1,0 +1,180 @@
+// analysis center fields : users
+{
+    "objectId": "0xf11dc89c68206efe335925aaf236cc966cb2f37285e98c3b95973be712cae933",
+    "version": "240761213",
+    "digest": "HJe9NnBPUBSn63e84JAmDzLUnnZ9CLDwH69iKD2UJABw",
+    "content": {
+        "dataType": "moveObject",
+        "type": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::AnalysisCenter<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+        "hasPublicTransfer": false,
+        "fields": {
+            "id": {
+                "id": "0xf11dc89c68206efe335925aaf236cc966cb2f37285e98c3b95973be712cae933"
+            },
+            "name": "",
+            "users": {
+                "type": "0x2::table::Table<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>>",
+                "fields": {
+                    "id": {
+                        "id": "0x9512e95bb72179964ca4cced088606ab362887b426963d0a311541a6bc59c81d"
+                    },
+                    "size": "2"
+                }
+            }
+        }
+    }
+}
+// register users : 
+[
+    {
+        "name": {
+            "type": "0x1::string::String",
+            "value": "2af6c1938280cf418ce388f62deffe9a56746d0887c9e6c031a4127016987e35"
+        },
+        "bcsName": "6faQLoojbURBsLiKrLiNr7vrsLRF7KQ2sNEVBaM3wjcYt5YPeMvCgwPrJaYKFNtnPJG1MJGzuovHJ9WQZWCT7PLn8",
+        "type": "DynamicField",
+        "objectType": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+        "objectId": "0xb14679aa0fc332ae0489d4f1127c1eb1f0496c21d434fb53f224c6c9d75389b6",
+        "version": 239672375,
+        "digest": "FDmhP3EeNNpBinKsbmpy544wp4c5WSgLVABNsj5Ea8ez"
+    },
+    {
+        "name": {
+            "type": "0x1::string::String",
+            "value": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c"
+        },
+        "bcsName": "6gaC7poTP3aEi2RfkckNc2cp6gsGASWbWMv954FZPc59RkS8aMfF8Ht9dNSKKsQjY3jiVGGx4M5wCVTWkxaHxU8gi",
+        "type": "DynamicField",
+        "objectType": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+        "objectId": "0xd9fed58945c778ee4261a5969ed68a3a283a0ae6ffa1bce76e5f71e6d67ece5e",
+        "version": 240761213,
+        "digest": "CGrkQK37jGqXdSyojATmxrS6wS2q6p8841ChNnsrvbdu"
+    }
+]
+// 具体的用户
+{
+    "objectId": "0xd9fed58945c778ee4261a5969ed68a3a283a0ae6ffa1bce76e5f71e6d67ece5e",
+    "version": "240761213",
+    "digest": "CGrkQK37jGqXdSyojATmxrS6wS2q6p8841ChNnsrvbdu",
+    "type": "0x2::dynamic_field::Field<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>>",
+    "owner": {
+        "ObjectOwner": "0x9512e95bb72179964ca4cced088606ab362887b426963d0a311541a6bc59c81d"
+    },
+    "previousTransaction": "GPPCdwFNX7eUS7C67NGaJ6cgoVi4T2szEeRG38koYbre",
+    "storageRebate": "3442800",
+    "content": {
+        "dataType": "moveObject",
+        "type": "0x2::dynamic_field::Field<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>>",
+        "hasPublicTransfer": false,
+        "fields": {
+            "id": {
+                "id": "0xd9fed58945c778ee4261a5969ed68a3a283a0ae6ffa1bce76e5f71e6d67ece5e"
+            },
+            "name": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c",
+            "value": {
+                "type": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::User<0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+                "fields": {
+                    "age": "18",
+                    "count": "2",
+                    "gender": "man",
+                    "name": "wu_ya",
+                    "reports": {
+                        "type": "0x2::table::Table<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+                        "fields": {
+                            "id": {
+                                "id": "0x79f7eafef5aa3cb02afd897c7369ac4e9b40637fc642df18fc265f9e26b3acee"
+                            },
+                            "size": "2"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+// 某个用户的所有report对象
+[
+    {
+        "name": {
+            "type": "0x1::string::String",
+            "value": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c1"
+        },
+        "bcsName": "SUFmzhnoyj2HcyaAgCLHeTV6ATJYf1GWjymwLEApkJJ5mmDtc1F6Jf2QSHfgUwuJmDLHUoFWJcHja3qDcf4TrZSj8k",
+        "type": "DynamicField",
+        "objectType": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport",
+        "objectId": "0x094ff0c43694d9a043fb916efb270772ed823fb0abcbde22f87104cb004721b9",
+        "version": 240761213,
+        "digest": "5Vjf1PshwVAHEAKUb3PAhHFLJkx2r7u9rFWD3csi9HCP"
+    },
+    {
+        "name": {
+            "type": "0x1::string::String",
+            "value": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c0"
+        },
+        "bcsName": "SUFmzhnoyj2HcyaAgCLHeTV6ATJYf1GWjymwLEApkJJ5mmDtc1F6Jf2QSHfgUwuJmDLHUoFWJcHja3qDcf4TrZSj8j",
+        "type": "DynamicField",
+        "objectType": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport",
+        "objectId": "0xefe2aef1333b990758c1f58a399d59791fa9bde9b099b46a9a56f37ba3e24a41",
+        "version": 240761212,
+        "digest": "ASWW73Z2fHY9qy43k1wDJAvUrobjfUJ19Pc7GbYQPibs"
+    }
+]
+//  所有的报告数据
+[
+    {
+        "data": {
+            "objectId": "0x094ff0c43694d9a043fb916efb270772ed823fb0abcbde22f87104cb004721b9",
+            "version": "240761213",
+            "digest": "5Vjf1PshwVAHEAKUb3PAhHFLJkx2r7u9rFWD3csi9HCP",
+            "content": {
+                "dataType": "moveObject",
+                "type": "0x2::dynamic_field::Field<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+                "hasPublicTransfer": false,
+                "fields": {
+                    "id": {
+                        "id": "0x094ff0c43694d9a043fb916efb270772ed823fb0abcbde22f87104cb004721b9"
+                    },
+                    "name": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c1",
+                    "value": {
+                        "type": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport",
+                        "fields": {
+                            "crp": "119",
+                            "name": "my_report_zhong_yi_yuan",
+                            "platelets": "117",
+                            "rbc": "115",
+                            "wbc": "112"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    {
+        "data": {
+            "objectId": "0xefe2aef1333b990758c1f58a399d59791fa9bde9b099b46a9a56f37ba3e24a41",
+            "version": "240761212",
+            "digest": "ASWW73Z2fHY9qy43k1wDJAvUrobjfUJ19Pc7GbYQPibs",
+            "content": {
+                "dataType": "moveObject",
+                "type": "0x2::dynamic_field::Field<0x1::string::String, 0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport>",
+                "hasPublicTransfer": false,
+                "fields": {
+                    "id": {
+                        "id": "0xefe2aef1333b990758c1f58a399d59791fa9bde9b099b46a9a56f37ba3e24a41"
+                    },
+                    "name": "d790d41adfffd48df8e38607991a297970743decff87517e647008a652587d4c0",
+                    "value": {
+                        "type": "0xc0dc1d96f4e76ffb9229af266b6078bf95223c70eeac32ce10289e3830572583::hcsc_v3::LabReport",
+                        "fields": {
+                            "crp": "104",
+                            "name": "wuya_xyy",
+                            "platelets": "103",
+                            "rbc": "102",
+                            "wbc": "100"
+                        }
+                    }
+                }
+            }
+        }
+    }
+]
