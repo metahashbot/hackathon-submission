@@ -4,8 +4,8 @@
 
 
 ## Member
-- klren0312  github: [https://github.com/klren0312](https://github.com/klren0312)
+- zzes312  github: [https://github.com/klren0312](https://github.com/klren0312)
 > 自我介绍&技术栈: 全干工程师 JavaScript
 
-- EarthChen  github: [https://github.com/earthchen](https://github.com/earthchen)
+- Earth-_-Chen  github: [https://github.com/earthchen](https://github.com/earthchen)
 > 自我介绍&技术栈: 全干工程师 Java
