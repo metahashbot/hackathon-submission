@@ -272,9 +272,9 @@ module sui_rog::role{
 // ==================================================================================================================================================
     // 升级检测
     public entry fun up_level(role: &mut Role) {
-        if(role.role_data.xp == 50) {
+        if(role.role_data.xp >= 50) {
             role.role_data.level = role.role_data.level + 1;
-            role.role_data.xp = 0;
+            role.role_data.xp = role.role_data.xp - 50;
             role.role_data.fighting_system.attack_power = role.role_data.fighting_system.attack_power + 2;
         }
     }

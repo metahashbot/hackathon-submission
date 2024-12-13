@@ -15,6 +15,7 @@ import { check_task_low } from '../interaction/check_task_low';
 import { send_rewards_low } from '../interaction/send_rewards_low';
 import { put_on_ep } from '../interaction/put_on_ep';
 import { take_off_ep } from '../interaction/take_off_ep';
+import { up_level } from '../interaction/up_level'
 
 declare global {
   namespace Phaser {
@@ -438,9 +439,6 @@ const Game: React.FC = () => {
         console.error('未找到角色的对象 ID');
         return;
       }
-
-      console.log(RoleObjectId)
-
       await check_task_low({
         signAndExecute,
         role: RoleObjectId,
@@ -577,6 +575,32 @@ const Game: React.FC = () => {
     }
   };
 
+  // 升级函数
+  const upgrade_level = async () => {
+    if (!RoleObjectId) {
+      toast.error("未找到角色信息！");
+      return;
+    }
+    try {
+      await up_level({
+        signAndExecute,
+        role: RoleObjectId,
+        counterPackageId,
+        onSuccess(result) {
+          console.log(result, '++++升级成功++++');
+          fetchRoleData(); // 重新获取角色数据以更新状态
+        },
+        onError(error) {
+          console.error(error, '++++升级失败++++');
+          toast.error("角色升级失败，请稍后再试！");
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("角色升级失败，请稍后再试！");
+    }
+  };
+
 
   // 任务渲染函数，处理 reward 字符串中的换行
   const renderReward = (reward: string) => {
@@ -610,7 +634,7 @@ const Game: React.FC = () => {
                 <li><strong>等级:</strong> {playerData.level}</li>
                 <li><strong>血量:</strong> {playerData.HP}</li>
                 <li><strong>攻击力:</strong> {playerData.attack}</li>
-                <li><strong>经验:</strong> {playerData.experience}</li>
+                <li><strong>经验:</strong> {playerData.experience}/50</li>
                 <li><strong>钱包:</strong> {playerData.wallet} Soul</li>
                 <li>
                   <strong>装备:</strong> 
@@ -621,6 +645,7 @@ const Game: React.FC = () => {
                 <li>
                   <button onClick={put_on}>装备</button>
                   <button onClick={take_off}>卸下</button>
+                  <button onClick={upgrade_level}>升级</button>
                 </li>
               </ul>
             )}

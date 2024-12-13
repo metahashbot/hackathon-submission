@@ -1,14 +1,14 @@
 import { Transaction } from "@mysten/sui/transactions";
 
-export const receive_task_low = async ({
-    signAndExecute,  
-    RoleObjectId,
+export const up_level = ({
+    signAndExecute, 
+    role, 
     counterPackageId,
     onSuccess = () => { }, 
     onError = () => { },
 }: {
     signAndExecute: any,
-    RoleObjectId: any,
+    role: any,
     counterPackageId: any,
     onSuccess?: (result: any) => void;
     onError?: (result: any) => void;
@@ -17,22 +17,15 @@ export const receive_task_low = async ({
     tx.moveCall ({
         package: counterPackageId,
         module: "role",
-        function: "receive_task_low",
+        function: "up_level",
         arguments: [
-            tx.pure.string("Kill the wolfs"),
-            tx.pure.string("Kill a wolf"),
-            tx.pure.u64(40),
-            tx.pure.u64(3),
-            tx.object(RoleObjectId),
+            tx.object(role),
         ],
     });
-
-    // 签名执行交易
-    await signAndExecute({
+    signAndExecute({
         transaction: tx,
     }, {
         onSuccess,
         onError,
-    });
-                                        
+    });                                  
 };
