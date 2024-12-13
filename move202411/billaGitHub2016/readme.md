@@ -1,6 +1,6 @@
 ## project
-- SUI-Zealy
-> 一个类似Zealy平台的项目，可以发布质押SUI任务，也可以完成任务后发起审核，审核通过后获得SUI奖励。
+- 项目名：SUI-Zealy
+> 一个类似Zealy平台的项目，用户可以质押SUI发布任务，也可以完成任务后发起审核，审核通过后获得SUI奖励。
 
 
 ## Member
