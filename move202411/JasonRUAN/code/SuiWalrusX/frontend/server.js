@@ -29,8 +29,8 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     });
 
     console.log('Sending request to Walrus Store...');
-    // const response = await fetch('https://publisher.walrus-testnet.walrus.space/v1/store', {
-    const response = await fetch('https://walrus-testnet-publisher.nodes.guru/v1/store', {
+    // const response = await fetch('https://publisher.walrus-testnet.walrus.space/v1/store?epochs=100', {
+    const response = await fetch('https://walrus-testnet-publisher.nodes.guru/v1/store?epochs=100', {
       method: 'PUT',
       body: req.file.buffer,
     });
