@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Transaction } from "@mysten/sui/transactions";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { CONSTANTS } from "../constants/constants";
@@ -16,6 +16,7 @@ interface XProfileInfo {
 export function useCreateXProfile() {
   const account = useCurrentAccount();
   const executeTransaction = useTransactionExecution();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (info: XProfileInfo) => {
@@ -48,8 +49,9 @@ export function useCreateXProfile() {
       console.error("Failed to create XProfile:", error);
       throw error;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       console.log("Successfully created XProfile:", data);
+      await queryClient.invalidateQueries({ queryKey: ["getDynamicFieldObject"] });
     },
   });
 }

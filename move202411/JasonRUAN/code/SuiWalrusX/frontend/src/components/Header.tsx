@@ -11,10 +11,11 @@ import {
 } from "react-icons/fa";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import XProfile from "./XProfile";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import useGetProfileTableId from "@/hooks/useGetProfileTableId";
 import { useGetDynamicFieldObject } from "@/hooks/useGetDynamicFieldObject";
+import { useQueryClient } from "@tanstack/react-query";
 
 const menu = [
   {
@@ -24,6 +25,7 @@ const menu = [
 ];
 
 const Header = () => {
+  const queryClient = useQueryClient();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -56,6 +58,12 @@ const Header = () => {
       setIsProfileOpen(true);
     }
   };
+
+  useEffect(() => {
+    if (!isProfileOpen) {
+      queryClient.invalidateQueries({ queryKey: ["getDynamicFieldObject"] });
+    }
+  }, [isProfileOpen, queryClient]);
 
   return (
     <Container>
