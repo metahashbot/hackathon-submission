@@ -3,7 +3,7 @@ import { Transaction } from "@mysten/sui/transactions";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { CONSTANTS } from "../constants/constants";
 import { useTransactionExecution } from "@/hooks/useTransactionExecution";
-import { walrusStore } from "@/utils/walrusUtils";
+import { putData } from "@/utils/walrusService";
 
 interface XProfileInfo {
   nickname: string;
@@ -23,7 +23,8 @@ export function useCreateXProfile() {
         throw new Error("You need to connect your wallet first pls!");
       }
 
-      const blob_id = await walrusStore(info.image);
+      const fileContent = await info.image.text();
+      const blob_id = await putData(fileContent);
 
       const txb = new Transaction();
       const ipfs_nft_url = `ipfs://${info.ipfsNFTHash}`;

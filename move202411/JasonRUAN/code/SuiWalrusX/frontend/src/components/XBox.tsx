@@ -7,7 +7,7 @@ import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useOwnedObjects } from "@/hooks/useOwnedObjects";
 import { CONSTANTS } from "@/constants/constants";
 import { toast } from "sonner";
-import { walrusStore } from "@/utils/walrusUtils";
+import { putData } from "@/utils/walrusService";
 import { useCreateTweet } from "@/mutations/twitter";
 import useGetProfileTableId from "@/hooks/useGetProfileTableId";
 import { useGetDynamicFieldObject } from "@/hooks/useGetDynamicFieldObject";
@@ -119,7 +119,8 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
       // Upload image to Walrus if selected
       let uploadedBlobId: string | undefined;
       if (selectedImage) {
-        uploadedBlobId = await walrusStore(selectedImage);
+        const fileContent = await selectedImage.text();
+        uploadedBlobId = await putData(fileContent);
 
         if (!uploadedBlobId) {
           toast.error("Failed to upload image to Walrus");

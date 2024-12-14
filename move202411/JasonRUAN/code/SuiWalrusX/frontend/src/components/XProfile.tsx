@@ -329,12 +329,12 @@ const XProfile = ({ isOpen, onClose }: XProfileProps) => {
                   Preview NFT
                 </Button>
 
-                <Button 
+                <Button
                   type="submit"
                   className="px-8 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={createProfile.isPending}
                 >
-                  {createProfile.isPending ? 'Creating...' : 'Create Profile'}
+                  {createProfile.isPending ? 'Minting...' : 'Mint Profile'}
                 </Button>
               </Flex>
             </Flex>

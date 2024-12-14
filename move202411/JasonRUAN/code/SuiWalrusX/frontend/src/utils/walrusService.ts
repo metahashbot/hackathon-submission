@@ -2,7 +2,7 @@ import { CONSTANTS } from "../constants/constants";
 
 export const putData = async (data: string): Promise<string> => {
   try {
-    const response = await fetch(CONSTANTS.WALRUS.PUBLISHER_URL + "/v1/store", {
+    const response = await fetch(CONSTANTS.WALRUS.PUBLISHER_URL + "/v1/store?epochs=100", {
       method: "PUT",
       body: data,
     });
