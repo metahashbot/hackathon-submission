@@ -40,8 +40,11 @@ export function XFeedItem({ dynamic_field_name, tweetsTableId }: TweetItemProps)
   const ipfsUrl = fields?.value?.fields?.ipfs_nft_url;
   const walletAddress = tweetContent.owner;
   const timestamp = new Date(parseInt(tweetContent.created_at)).toLocaleString();
-  const image_blob_id = fields?.value?.fields?.image_blob_id;
+  const media_blob_id = tweetContent.media_blob_id;
 
+  console.log(">>>>>>> tweetContent: ", JSON.stringify(tweetContent));
+  console.log(">>>>>>> media_blob_id: ", media_blob_id);
+  console.log(">>>>>>> ipfsUrl: ", ipfsUrl);
 
   return (
     <div className={style.feedContainer}>
@@ -52,7 +55,7 @@ export function XFeedItem({ dynamic_field_name, tweetsTableId }: TweetItemProps)
         avatar={ipfsUrl ? ipfsUrl.replace('ipfs://', 'https://ipfs.io/ipfs/') : `https://avatars.dicebear.com/api/pixel-art/${walletAddress}.svg`}
         isProfileImageNft={!!ipfsUrl}
         timestamp={timestamp}
-        image_blob_id={image_blob_id}
+        media_blob_id={media_blob_id}
       />
     </div>
   );

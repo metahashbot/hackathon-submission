@@ -29,7 +29,7 @@ interface PostProps {
   avatar: string;
   timestamp: string | number;
   isProfileImageNft: boolean;
-  image_blob_id?: string;
+  media_blob_id?: string;
 }
 
 const Post: React.FC<PostProps> = ({
@@ -39,7 +39,7 @@ const Post: React.FC<PostProps> = ({
   avatar,
   timestamp,
   isProfileImageNft,
-  image_blob_id,
+  media_blob_id,
 }) => {
   return (
     <div className={style.wrapper}>
@@ -68,10 +68,10 @@ const Post: React.FC<PostProps> = ({
             </span>
           </span>
           <div className={style.tweet}>{text}</div>
-          {image_blob_id && (
+          {media_blob_id && (
             <div className="relative overflow-hidden rounded-3xl">
               <img
-                src={`${CONSTANTS.WALRUS.AGGREGATOR_URL}/v1/${image_blob_id}`}
+                src={`${CONSTANTS.WALRUS.AGGREGATOR_URL}/v1/${media_blob_id}`}
                 alt="Tweet media"
                 className={style.image}
                 onError={(e) => {

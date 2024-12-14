@@ -1,3 +1,11 @@
+/*
+ * @Author: jasonruan
+ * @version: v1.0.0
+ * @Date: 2024-12-13 15:47:50
+ * @Description: 
+ * @LastEditors: jasonruan
+ * @LastEditTime: 2024-12-14 22:43:14
+ */
 /** @ts-ignore */
 import typingSpeedContract from "../../typing-speed-contract.json";
 import suiWalrusXContract from "../../sui-walrusx-contract.json";
@@ -12,8 +20,10 @@ export const CONSTANTS = {
     WALRUSX_PASSPORT_NFT_OBJECT_TYPE: `${suiWalrusXContract.packageId}::x_pass_nft::XPassNFT`,
   },
   WALRUS: {
-    PUBLISHER_URL: "https://walrus-testnet-publisher.nodes.guru",
-    AGGREGATOR_URL: "https://walrus-testnet-aggregator.nodes.guru",
+    // PUBLISHER_URL: "https://walrus-testnet-publisher.nodes.guru",
+    // AGGREGATOR_URL: "https://walrus-testnet-aggregator.nodes.guru",
+    PUBLISHER_URL: "https://publisher.walrus-testnet.walrus.space",
+    AGGREGATOR_URL: "https://aggregator.walrus-testnet.walrus.space",
   },
   PINATA: {
     API_KEY: import.meta.env.VITE_PINATA_API_KEY,
