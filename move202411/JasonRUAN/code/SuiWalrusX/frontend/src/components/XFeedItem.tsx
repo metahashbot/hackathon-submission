@@ -42,10 +42,6 @@ export function XFeedItem({ dynamic_field_name, tweetsTableId }: TweetItemProps)
   const timestamp = new Date(parseInt(tweetContent.created_at)).toLocaleString();
   const media_blob_id = tweetContent.media_blob_id;
 
-  console.log(">>>>>>> tweetContent: ", JSON.stringify(tweetContent));
-  console.log(">>>>>>> media_blob_id: ", media_blob_id);
-  console.log(">>>>>>> ipfsUrl: ", ipfsUrl);
-
   return (
     <div className={style.feedContainer}>
       <Post
