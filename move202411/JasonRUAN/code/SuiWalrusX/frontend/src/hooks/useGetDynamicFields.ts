@@ -18,10 +18,10 @@ export function useGetDynamicFields(tableId?: string) {
       }
     );
 
-    if (!account) {
-      toast.error("connect wallet first pls.");
-      return;
-    }
+    // if (!account) {
+    //   toast.error("connect wallet first pls.");
+    //   return;
+    // }
 
     if (error) {
       toast.error(`get dynamic fields failed: ${error.message}`);
@@ -29,7 +29,8 @@ export function useGetDynamicFields(tableId?: string) {
     }
 
     if (isPending || !dynamicFields) {
-      toast.error("loading data...");
+      // toast.error("loading data...");
+      console.error("loading data...");
       return;
     }
 

@@ -29,12 +29,8 @@ export function XFeedItem({ dynamic_field_name, tweetsTableId }: TweetItemProps)
   const tweetContent = tweetData?.data?.content ? (tweetData.data.content as any).fields?.value?.fields as Tweet : undefined;
   const profile = useGetProfile(tweetContent?.owner);
 
-  if (!tweetData?.data?.content) {
-    return <div className="text-center p-4">暂无数据</div>;
-  }
-
-  if (!tweetContent) {
-    return <div className="text-center p-4">数据格式错误</div>;
+  if (!tweetData?.data?.content || !tweetContent) {
+    return null;
   }
 
   const fields = profile?.data?.content?.dataType === "moveObject"

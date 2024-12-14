@@ -24,18 +24,18 @@ export function useGetDynamicFieldObject({ dynamic_field_name, tableId }: FieldI
       },
     );
 
-    if (!account) {
-      toast.error("connect wallet first pls.");
-      return;
-    }
+    // if (!account) {
+    //   toast.error("connect wallet first pls.");
+    //   return;
+    // }
 
     if (error) {
-      toast.error(`get dynamic fields failed: ${error.message}`);
+      // toast.error(`get dynamic fields failed: ${error.message}`);
       return;
     }
 
     if (isLoading || !dynamicFieldData) {
-      toast.error("loading data...");
+      // toast.error("loading data...");
       return;
     }
 

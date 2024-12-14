@@ -18,18 +18,18 @@ export function useGetTweetObjects(tweetsTableId?: string) {
       }
     );
 
-    if (!account) {
-      toast.error("connect wallet first pls.");
-      return;
-    }
+    // if (!account) {
+    //   toast.error("connect wallet first pls.");
+    //   return;
+    // }
 
     if (error) {
-      toast.error(`get tweets objects failed: ${error.message}`);
+      // toast.error(`get tweets objects failed: ${error.message}`);
       return;
     }
 
     if (isPending || !tweetObjects) {
-      toast.error("loading data...");
+      // toast.error("loading data...");
       return;
     }
 
