@@ -20,7 +20,7 @@ const ECommentEmpty: u64 = 7;
 const EAlreadyHasProfile: u64 = 8;
 
 // ====== Constants ======
-const MAX_TWEET_LENGTH: u64 = 280;
+const MAX_TWEET_LENGTH: u64 = 1024;
 
 // ====== Struct Definitions ======
 /// WalrusX is the main storage structure for a decentralized Twitter-like system

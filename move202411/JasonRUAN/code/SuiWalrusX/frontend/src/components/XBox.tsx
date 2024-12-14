@@ -33,12 +33,15 @@ interface XBoxProps {
   onPostSuccess?: () => void;
 }
 
+const MAX_TWEET_LENGTH = 280;
+
 const XBox = ({ onPostSuccess }: XBoxProps) => {
   const [message, setMessage] = useState("");
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [blobId, setBlobId] = useState<string | null>(null);
+  const [isOverLimit, setIsOverLimit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const account = useCurrentAccount();
@@ -107,6 +110,11 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
   const handlePost = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!message && !selectedImage) return;
+    
+    if (message.length > MAX_TWEET_LENGTH) {
+      toast.error("Tweet cannot exceed 280 characters");
+      return;
+    }
 
     // Check if XPassport NFT exists
     if (!xPassNFTs || xPassNFTs.length === 0) {
@@ -152,6 +160,12 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
     }
   };
 
+  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newMessage = e.target.value;
+    setMessage(newMessage);
+    setIsOverLimit(newMessage.length > MAX_TWEET_LENGTH);
+  };
+
   return (
     <div className={style.wrapper}>
       <div className={style.boxLeft}>
@@ -168,12 +182,19 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
       <div className={style.boxRight}>
         <form onSubmit={handlePost}>
           <textarea
-            className={style.inputField}
+            className={`${style.inputField} ${
+              isOverLimit ? 'border-red-500' : ''
+            }`}
             placeholder="What's happening?"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleMessageChange}
             rows={3}
           />
+          <div className={`text-right text-sm mt-1 ${
+            isOverLimit ? 'text-red-500' : 'text-gray-500'
+          }`}>
+            {message.length}/{MAX_TWEET_LENGTH}
+          </div>
           {imagePreview && (
             <div className={style.imagePreview}>
               <img

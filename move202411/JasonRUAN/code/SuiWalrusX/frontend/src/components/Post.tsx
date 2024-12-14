@@ -9,14 +9,14 @@ import { CONSTANTS } from '@/constants/constants'
 dayjs.extend(relativeTime)
 
 const style = {
-  wrapper: `flex p-3 border-b border-[#38444d]`,
-  profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
-  postMain: `flex-1 px-4`,
+  wrapper: `flex p-3 border-b border-[#38444d] min-w-0`,
+  profileImage: `rounded-full h-[40px] w-[40px] object-cover shrink-0`,
+  postMain: `flex-1 px-4 min-w-0`,
   headerDetails: `flex items-center`,
   name: `font-bold mr-1`,
   verified: `text-[0.8rem]`,
   handleAndTimeAgo: `text-[#8899a6] ml-1`,
-  tweet: `my-2`,
+  tweet: `my-2 break-words overflow-hidden overflow-wrap-break-word`,
   image: `rounded-3xl`,
   footer: `flex justify-between mr-28 mt-4 text-[#8899a6]`,
   footerIcon: `rounded-full text-lg p-2`,
@@ -55,7 +55,7 @@ const Post: React.FC<PostProps> = ({
         />
       </div>
       <div className={style.postMain}>
-        <div>
+        <div className="max-w-full">
           <span className={style.headerDetails}>
             <span className={style.name}>{displayName}</span>
             {isProfileImageNft && (
