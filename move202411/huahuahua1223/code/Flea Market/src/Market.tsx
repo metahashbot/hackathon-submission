@@ -32,50 +32,50 @@ export function Market({ id }: { id: string }) {
   const [isLoadingItems, setIsLoadingItems] = useState(false);
 
   // 获取市场商品列表
-  const getMarketItems = async () => {
-    setIsLoadingItems(true);
+  // const getMarketItems = async () => {
+  //   setIsLoadingItems(true);
 
-    const tx = new Transaction();
+  //   const tx = new Transaction();
 
-    // 调用Move函数`get_items`
-    const response = tx.moveCall({
-      target: `${counterPackageId}::marketplace::get_items`,
-      arguments: [tx.object(id)], // 传入市场ID
-    });
+  //   // 调用Move函数`get_items`
+  //   const response = tx.moveCall({
+  //     target: `${counterPackageId}::marketplace::get_items`,
+  //     arguments: [tx.object(id)], // 传入市场ID
+  //   });
 
-    console.log("=========================",response)
+  //   console.log("=========================",response)
 
-    try {
-      signAndExecute(
-        {
-          transaction: tx,
-        },
-        {
-          onSuccess: async (tx) => {
-            // 等待交易完成
-            await suiClient.waitForTransaction({ digest: tx.digest }).then(async (tx) => {
-              console.log("=========",tx)
-            });
+  //   try {
+  //     signAndExecute(
+  //       {
+  //         transaction: tx,
+  //       },
+  //       {
+  //         onSuccess: async (tx) => {
+  //           // 等待交易完成
+  //           await suiClient.waitForTransaction({ digest: tx.digest }).then(async (tx) => {
+  //             console.log("=========",tx)
+  //           });
   
-            // 交易成功后查询市场商品数据
-            // const itemsData = await suiClient.getTransactionBlock({ digest: tx.digest });
-            // console.log("=========",itemsData)
-            // setItems(itemsData); // 设置市场商品
-          },
-          onError: () => {
-            notification.error({
-              message: "获取商品失败",
-              description: "获取市场商品时发生错误，请稍后重试。",
-            });
-          },
-        }
-      );
-    } catch (error) {
-      console.error("获取市场商品时发生错误:", error);
-    } finally {
-      setIsLoadingItems(false);
-    }
-  };
+  //           // 交易成功后查询市场商品数据
+  //           // const itemsData = await suiClient.getTransactionBlock({ digest: tx.digest });
+  //           // console.log("=========",itemsData)
+  //           // setItems(itemsData); // 设置市场商品
+  //         },
+  //         onError: () => {
+  //           notification.error({
+  //             message: "获取商品失败",
+  //             description: "获取市场商品时发生错误，请稍后重试。",
+  //           });
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.error("获取市场商品时发生错误:", error);
+  //   } finally {
+  //     setIsLoadingItems(false);
+  //   }
+  // };
 
   // 执行上架商品操作
   const executeMoveCall = () => {
@@ -119,9 +119,9 @@ export function Market({ id }: { id: string }) {
     );
   };
 
-  useEffect(() => {
-    getMarketItems(); // 加载商品列表
-  }, [id]);
+  // useEffect(() => {
+  //   getMarketItems(); // 加载商品列表
+  // }, [id]);
 
   if (isPending) return <Spin tip="Loading..." />;
 
@@ -174,7 +174,7 @@ export function Market({ id }: { id: string }) {
         </Col>
 
         {/* 显示商品列表 */}
-        <Col xs={24} sm={18} md={12} lg={8}>
+        {/* <Col xs={24} sm={18} md={12} lg={8}>
           <Card
             bordered={false}
             style={{ padding: "20px", backgroundColor: "#fafafa", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
@@ -195,7 +195,8 @@ export function Market({ id }: { id: string }) {
               />
             )}
           </Card>
-        </Col>
+        </Col> */}
+        
       </Row>
     </>
   );
