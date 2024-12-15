@@ -18,7 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Pencil, Bitcoin, Send } from "lucide-react";
+import { MoreHorizontal, Pencil, Bitcoin, Send, Gift, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Pagination,
@@ -34,7 +34,7 @@ import { Task } from "@/types/task";
 import TaskSubmissionDialog from "@/components/TaskSubmissionDialog";
 import TaskPublishDialog from "@/components/TaskPublishDialog";
 import SimpleAlert from "@/components/simple-alert";
-import { SUI_MIST, STATUS_MAP, Two_Hours_Ms } from "@/config/constants";
+import { SUI_MIST, STATUS_MAP, Two_Hours_Ms, Draft, Published } from "@/config/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import { User } from "@supabase/supabase-js";
 import AddressLink from "./address-link";
@@ -76,7 +76,7 @@ export async function deleteTask(id: string): Promise<Task[]> {
 export function TaskListTable({ user }: { user: User }) {
   const [pageNo, setPageNo] = useState(1);
   const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const pageSize = 10;
   const totalPage = Math.ceil(total / pageSize);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -84,6 +84,9 @@ export function TaskListTable({ user }: { user: User }) {
   const [openAlert, setOpenAlert] = useState(false);
   const [operation, setOperation] = useState("");
   const [alertTips, setAlertTips] = useState("");
+  const [publishDialogTitle, setPublishDialogTitle] = useState("");
+  const [submitTaskDialogTitle, setSubmitTaskDialogTitle] =
+    useState("创建任务");
   const form = useRef<{ setOpen: Function }>(null);
   const publishForm = useRef<{ setOpen: Function }>(null);
 
@@ -112,8 +115,17 @@ export function TaskListTable({ user }: { user: User }) {
   };
 
   const handleEdit = (id: string) => {
+    const editTask = tasks.find((item) => item.id === parseInt(id));
+    if (editTask?.status !== Draft) {
+      toast({
+        title: "校验失败",
+        description: "任务不是草稿状态，不能编辑",
+      });
+      return;
+    }
     console.log(`编辑任务 ${id}`);
     setEditTaskId(id);
+    setSubmitTaskDialogTitle("编辑任务");
     if (form.current) {
       form.current.setOpen(true);
     }
@@ -122,14 +134,38 @@ export function TaskListTable({ user }: { user: User }) {
   const handleWithdraw = (id: string) => {
     console.log(`提现 ${id}`);
     setEditTaskId(id);
+    setPublishDialogTitle("任务提现");
     publishForm.current?.setOpen(true);
   };
 
   const handlePublish = (id: string) => {
+    const editTask = tasks.find((item) => item.id === parseInt(id));
+    if (editTask?.status !== Draft) {
+      toast({
+        title: "校验失败",
+        description: "任务不是草稿状态，不能发布",
+      });
+      return;
+    }
     console.log(`发布任务 ${id}`);
     setEditTaskId(id);
+    setPublishDialogTitle("发布任务");
     publishForm.current?.setOpen(true);
   };
+
+  const handleRaffle = (id: string) => {
+    const editTask = tasks.find((item) => item.id === parseInt(id));
+    if (editTask?.status !== Published) {
+      toast({
+        title: "校验失败",
+        description: "任务不是发布状态，不能抽奖",
+      });
+      return;
+    }
+    setEditTaskId(id);
+    setPublishDialogTitle("抽奖");
+    publishForm.current?.setOpen(true);
+  }
 
   const onConfirm = () => {
     if (operation === "delete") {
@@ -159,14 +195,30 @@ export function TaskListTable({ user }: { user: User }) {
   };
 
   return (
-    <div className="w-full">
-      <div className="mt-4"></div>
+    <div className="w-full relative">
+      <div className="absolute right-0 top-0">
+        <Button
+          variant={"outline"}
+          onClick={() => {
+            getTaskByPage();
+          }}
+        >
+          <RefreshCw /> 刷新
+        </Button>
+      </div>
       <TaskSubmissionDialog
         ref={form}
         taskId={editTaskId}
+        title={submitTaskDialogTitle}
         submitSuccessCallback={getTaskByPage}
       />
-      <TaskPublishDialog ref={publishForm} taskId={editTaskId} user={user}/>
+      <TaskPublishDialog
+        ref={publishForm}
+        taskId={editTaskId}
+        user={user}
+        title={publishDialogTitle}
+        submitSuccessCallback={getTaskByPage}
+      />
       <div className="mt-4"></div>
       <Table>
         <TableHeader>
@@ -205,8 +257,8 @@ export function TaskListTable({ user }: { user: User }) {
                       task.status == 0
                         ? "outline"
                         : task.status == 1
-                        ? "default"
-                        : "secondary"
+                          ? "default"
+                          : "secondary"
                     }
                   >
                     {STATUS_MAP[task.status as 0 | 1 | 2]}
@@ -217,13 +269,17 @@ export function TaskListTable({ user }: { user: User }) {
                   {new Date(task.created_at).toLocaleString()}
                 </TableCell>
                 <TableCell>
-                  {task.publish_date && new Date(task.publish_date).toLocaleString() || ''}
+                  {(task.publish_date &&
+                    new Date(task.publish_date).toLocaleString()) ||
+                    ""}
                 </TableCell>
                 <TableCell>
-                  {task.address && <AddressLink
-                    address={task.address}
-                    type="object"
-                  ></AddressLink>}
+                  {task.address && (
+                    <AddressLink
+                      address={task.address}
+                      type="object"
+                    ></AddressLink>
+                  )}
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
@@ -235,19 +291,37 @@ export function TaskListTable({ user }: { user: User }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>操作</DropdownMenuLabel>
-                      <DropdownMenuItem onClick={() => handleEdit(task.id as unknown as string)}>
+                      <DropdownMenuItem
+                        onClick={() => handleEdit(task.id as unknown as string)}
+                      >
                         <Pencil className="mr-2 h-4 w-4" />
                         <span>编辑</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleWithdraw(task.id as unknown as string)}>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleWithdraw(task.id as unknown as string)
+                        }
+                      >
                         <Bitcoin className="mr-2 h-4 w-4" />
                         <span>提现</span>
                       </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handlePublish(task.id as unknown as string)}>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handlePublish(task.id as unknown as string)
+                        }
+                      >
                         <Send className="mr-2 h-4 w-4" />
                         <span>发布</span>
                       </DropdownMenuItem>
+                      {task.reward_method === 2 && (<DropdownMenuItem
+                        onClick={() =>
+                          handleRaffle(task.id as unknown as string)
+                        }
+                      >
+                        <Gift className="mr-2 h-4 w-4" />
+                        <span>抽奖</span>
+                      </DropdownMenuItem>)}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

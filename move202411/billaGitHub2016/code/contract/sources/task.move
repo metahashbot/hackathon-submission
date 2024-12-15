@@ -60,6 +60,7 @@ module sui_zealy::task {
         owner_address: address,
         reward_address: address,
         reward_coin_value: u64,
+        record_id: ID,
         date: u64
     }
 
@@ -84,10 +85,11 @@ module sui_zealy::task {
     const ERecordOverDate: u64 = 22;
     const ERecordOverLimit: u64 = 23;
     const ERecordNotClear: u64 = 24;
+    const ERecordCountMustGreaterThanZero: u64 = 25;
 
 
-    const Status_Pass: u8 = 2;
-    const Status_Reject: u8 = 3;
+    const Status_Pass: u8 = 1;
+    const Status_Reject: u8 = 2;
 
     fun init(_ctx: &TxContext) {}
 
@@ -167,19 +169,19 @@ module sui_zealy::task {
         file_urls: vector<String>,
         clock: &Clock,
         ctx: &mut TxContext
-    ): ID {
+    ) {
         let task_id = task.id.to_inner();
         let new_record = record::new_record(task_id, ctx.sender(), content, file_urls, clock, ctx);
         let new_record_id = new_record.get_id();
         let current_date = clock.timestamp_ms();
         task.records.add(new_record_id, new_record);
         task.records_ids.push_back(new_record_id);
-        // event::emit(ADD_RECORD_EVENT {
-        //     task_id,
-        //     record_id: new_record_id,
-        //     date: current_date
-        // }); // 加了这个之后，前端调用就会报错，不知什么原因 T_T
-        new_record_id
+        event::emit(ADD_RECORD_EVENT {
+            task_id,
+            record_id: new_record_id,
+            date: current_date
+        });
+        // new_record_id // 加了这个之后，前端调用就会报错 CommandArgumentError { arg_idx: 0, kind: TypeMismatch } in command 0
     }
 
     fun get_pass_records_count(task: &Task): u64 {
@@ -241,6 +243,7 @@ module sui_zealy::task {
                     owner_address: ctx.sender(),
                     reward_address: get_task_ower_address(transfer_record),
                     reward_coin_value: coin::value<SUI>(&reward_coin),
+                    record_id: record_id,
                     date: current_date
                 });
                 transfer_reward(transfer_record, reward_coin);
@@ -251,6 +254,7 @@ module sui_zealy::task {
                     owner_address: ctx.sender(),
                     reward_address: get_task_ower_address(transfer_record),
                     reward_coin_value: coin::value<SUI>(&reward_coin_left),
+                    record_id: record_id,
                     date: current_date
                 });
                 transfer_reward(transfer_record, reward_coin_left);
@@ -263,13 +267,16 @@ module sui_zealy::task {
         task: &mut Task,
         r: &Random,
         clock: &Clock,
-        ctx: &mut TxContext): (&Record, Coin<SUI>) {
+        ctx: &mut TxContext) {
         let current_date = clock.timestamp_ms();
-        assert!(current_date < task.end_date, ERecordOverDate);
-
+        let pass_record_count = get_pass_records_count(task);
+        assert!(pass_record_count > 0, ERecordCountMustGreaterThanZero);
+        if (pass_record_count < task.claim_limit) {
+            assert!(current_date < task.end_date, ERecordOverDate); // 没有到达claim_limit， 要到结束日期才能抽奖
+        };
         let pass_records: vector<sui::object::ID> = get_pass_records(task);
         let mut generator = new_generator(r, ctx);
-        let v: u64 = generator.generate_u64_in_range(0, pass_records.length() - 1);
+        let v: u64 = generator.generate_u64_in_range(0, pass_record_count - 1);
         let lucky_record_id: ID = pass_records[v];
         let lucky_record: &Record = task.records.borrow(lucky_record_id);
         let pool_balance = task.pool.value();
@@ -280,12 +287,13 @@ module sui_zealy::task {
             owner_address: ctx.sender(),
             reward_address: get_task_ower_address(lucky_record),
             reward_coin_value: balance::value<SUI>(&reward_coin_balance),
+            record_id: lucky_record_id,
             date: current_date
         });
 
         let reward_coin = coin::from_balance(reward_coin_balance, ctx);
-        // transfer_reward(lucky_record, reward_coin);
-        (lucky_record, reward_coin)
+        transfer_reward(lucky_record, reward_coin);
+        // (lucky_record, reward_coin)
     }
 
     public fun remove_all_task_records(task: &mut Task, _: &AdminCap, _clock: &Clock, _ctx: &mut TxContext) {

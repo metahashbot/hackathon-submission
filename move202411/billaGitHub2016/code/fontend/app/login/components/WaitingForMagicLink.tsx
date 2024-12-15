@@ -10,19 +10,19 @@ export const WaitingForMagicLink = ({
     <>
       <div className="flex items-center justify-center p-8">
         <div className="flex flex-col gap-4 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 p-4 rounded-xl max-w-sm w-full">
-          <h1 className="text-xl">Check your email to continue</h1>
+          <h1 className="text-xl">请查看您的邮箱</h1>
           <div className="flex flex-col gap-2">
             <p className="text-sm">
-              We've emailed you a magic link to access your account.
+              我们已经发送了一封带有magic link的电子邮件到您的邮箱。
             </p>
             <p className="text-xs opacity-60">
-              Hint: it might be in your spam folder.
+              提示：它可能位于您的垃圾邮件文件夹中。
             </p>
           </div>
           <div>
             <Button onClick={toggleState} variant="secondary" size="sm">
               <ArrowLeft size={14} />
-              Go back
+              返回
             </Button>
           </div>
         </div>

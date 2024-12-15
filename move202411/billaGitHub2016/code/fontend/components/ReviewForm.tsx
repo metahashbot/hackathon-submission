@@ -39,7 +39,7 @@ import { DateBefore } from "react-day-picker";
 import { Record } from "@/types/record";
 import { Task } from "@/types/task";
 import { User } from "@supabase/supabase-js";
-import { Pass, Fail, RESULT_MAP } from '@/config/constants'
+import { Pass, Fail, RESULT_MAP, Completed } from '@/config/constants'
 import { bcs, fromHEX, toHEX } from '@mysten/bcs';
 
 const formSchema = z.object({
@@ -159,7 +159,6 @@ const ReviewForm = (
           target: `${process.env.NEXT_PUBLIC_PACKAGE_ID}::task::handle_claim_task_record`,
           arguments: [
             txb.object(task.address as string),
-            // txb.pure(bcs.vector(bcs.U32).serialize(numberArray)),
             txb.pure.address(record_address),
             // txb.pure(UID.serialize(record_address).toBytes()),
             txb.pure.u8(values.result),
@@ -175,7 +174,6 @@ const ReviewForm = (
           },
           {
             onSuccess: async (data) => {
-              debugger
               console.log('review data = ', data)
               if (
                 ((data.effects &&
@@ -194,6 +192,20 @@ const ReviewForm = (
                   body: formData,
                 });
 
+                const { claim_limit, record_pass_count } = task
+                if ((record_pass_count as number) + 1 >= (claim_limit as number)) {
+                  await fetch("/api/publishedTasks", {
+                    method: "PUT",
+                    body: JSON.stringify({
+                      id: task.id,
+                      status: Completed
+                    }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    }
+                  });
+                }
+
                 if (!response.ok) {
                   const res = await response.json();
                   throw new Error(res.message);
@@ -201,7 +213,7 @@ const ReviewForm = (
 
                 toast({
                   title: "审核提交成功",
-                  description: "审核提交成功，奖励已发放",
+                  description: task.reward_method === 1 ? (values.result == Pass ? "审核提交成功，奖励已发放" : "审核提交成功") : "审核提交成功，抽奖后可发放奖励",
                 });
                 onSubmitSuccess && onSubmitSuccess();
                 resolve('');

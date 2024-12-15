@@ -13,12 +13,9 @@ import Link from "next/link";
 import { Button } from "./ui/button";
 import React from "react";
 import { Database } from "@/types/supabase";
+import { ThemedButton } from "./ThemedButton";
 
 export const dynamic = "force-dynamic";
-
-const stripeIsConfigured = process.env.NEXT_PUBLIC_STRIPE_IS_ENABLED === "true";
-
-const packsIsEnabled = process.env.NEXT_PUBLIC_TUNE_TYPE === "packs";
 
 export const revalidate = 0;
 
@@ -39,21 +36,23 @@ export default async function Navbar() {
     <div className="flex w-full px-4 lg:px-40 py-4 items-center border-b text-center gap-8 justify-between">
       <div className="flex gap-2 h-full">
         <Link href="/">
-          <h2 className="font-bold text-xl">SUI-Zealy</h2>
+          <h2 className="font-bold text-xl leading-9 mb-0">SUI-Zealy</h2>
         </Link>
+
+        <div className="hidden sm:flex lg:flex flex-row gap-2 ml-8">
+          <Link href="/published-tasks">
+            <Button variant={"ghost"}>已发布的任务</Button>
+          </Link>
+          <Link href="/overview">
+            <Button variant={"ghost"}>我的</Button>
+          </Link>
+        </div>
       </div>
-      <div className="hidden lg:flex flex-row gap-2">
-        <Link href="/published-tasks">
-          <Button variant={"ghost"}>已发布的任务</Button>
-        </Link>
-        <Link href="/overview">
-          <Button variant={"ghost"}>我的</Button>
-        </Link>
-      </div>
-      <div className="flex gap-4 lg:ml-auto">
+      <div className="flex gap-4 lg:ml-auto items-center">
+        <ThemedButton></ThemedButton>
         {!user && (
           <Link href="/login">
-            <Button variant={"ghost"}>Login / Signup</Button>
+            <Button variant={"ghost"}>登录 / 注册</Button>
           </Link>
         )}
         {user && (
@@ -73,7 +72,7 @@ export default async function Navbar() {
                     className="w-full text-left"
                     variant={"ghost"}
                   >
-                    Log out
+                    登出
                   </Button>
                 </form>
               </DropdownMenuContent>

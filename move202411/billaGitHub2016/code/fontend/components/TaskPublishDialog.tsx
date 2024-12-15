@@ -39,10 +39,12 @@ const TaskPublishDialog = (
     taskId,
     title = "发布任务",
     user,
+    submitSuccessCallback,
   }: {
     taskId?: string;
     title?: string;
     user: User | null;
+    submitSuccessCallback: () => void;
   },
   ref: Ref<{
     setOpen: Function;
@@ -52,7 +54,11 @@ const TaskPublishDialog = (
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(false);
-  const taskDetail = useRef<{ handlePublish: () => Promise<"">, handleWithdraw: () => Promise<""> }>(null);
+  const taskDetail = useRef<{
+    handlePublish: () => Promise<"">;
+    handleWithdraw: () => Promise<"">;
+    handleRaffle: () => Promise<"">;
+  }>(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [operation, setOperation] = useState("");
   const [alertTips, setAlertTips] = useState("");
@@ -85,6 +91,10 @@ const TaskPublishDialog = (
         setIsSubmitting(true);
         taskDetail.current
           .handlePublish()
+          .then(() => {
+            setOpen(false);
+            submitSuccessCallback && submitSuccessCallback();
+          })
           .catch(() => { })
           .finally(() => {
             setIsSubmitting(false);
@@ -95,6 +105,24 @@ const TaskPublishDialog = (
         setIsSubmitting(true);
         taskDetail.current
           .handleWithdraw()
+          .then(() => {
+            setOpen(false);
+            submitSuccessCallback && submitSuccessCallback();
+          })
+          .catch(() => { })
+          .finally(() => {
+            setIsSubmitting(false);
+          });
+      }
+    } else if (operation === "raffle") {
+      if (taskDetail.current) {
+        setIsSubmitting(true);
+        taskDetail.current
+          .handleRaffle()
+          .then(() => {
+            setOpen(false);
+            submitSuccessCallback && submitSuccessCallback();
+          })
           .catch(() => { })
           .finally(() => {
             setIsSubmitting(false);
@@ -136,6 +164,47 @@ const TaskPublishDialog = (
     }
   };
 
+  const onRaffle = (raffleTask: Task) => {
+    console.log(`抽奖 ${raffleTask.id}`);
+    if (raffleTask) {
+      const { publish_date, end_date, claim_limit, record_pass_count, record_not_check_count } = raffleTask;
+      const now = new Date();
+      const endDate = new Date(end_date as string);
+      const diffTime2 = Math.abs(now.getTime() - endDate.getTime());
+      if ((record_pass_count as number) < (claim_limit as number)) {
+        if (diffTime2 < 0) {
+          toast({
+            title: "校验失败",
+            description: "任务没到结束时间，无法抽奖。",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+      if ((record_not_check_count as number) > 0) {
+        toast({
+          title: "校验失败",
+          description: "存在未审核的记录，无法提现。",
+          variant: "destructive",
+        });
+        return;
+      }
+      if (task?.status !== 1) {
+        toast({
+          title: "校验失败",
+          description: "任务未发布，无法抽奖。",
+          variant: "destructive",
+        });
+        return;
+      }
+      setOperation("raffle");
+      setAlertTips(
+        "抽奖结束后将把奖金转给中奖者，确认继续？"
+      );
+      setOpenAlert(true);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
@@ -159,7 +228,7 @@ const TaskPublishDialog = (
           />
         </div>
         <DialogFooter className="">
-          {task?.status === 0 && (
+          {!loading && task?.status === 0 && (
             <Button
               onClick={() => {
                 setOperation("publish");
@@ -173,7 +242,7 @@ const TaskPublishDialog = (
               {isSubmitting ? "提交中..." : "发布"}
             </Button>
           )}
-          {task?.status === 1 && (
+          {!loading && task?.status === 1 && title === '任务提现' && (
             <Button
               onClick={() => {
                 onWithdraw(task);
@@ -181,6 +250,16 @@ const TaskPublishDialog = (
               disabled={isSubmitting}
             >
               {isSubmitting ? "提交中..." : "提现"}
+            </Button>
+          )}
+          {!loading && task?.status === 1 && task.reward_method === 2 && title === '抽奖' && (
+            <Button
+              onClick={() => {
+                onRaffle(task);
+              }}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "提交中..." : "抽奖"}
             </Button>
           )}
         </DialogFooter>
