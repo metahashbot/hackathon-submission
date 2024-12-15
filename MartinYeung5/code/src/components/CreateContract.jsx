@@ -29,10 +29,10 @@ export default function CreateContract() {
   const demo = async () => {
     try {
       const packageObjectId =
-        '0xaa6a9e400c302ef1330aa1bca1881f71179ac3f6b81648b9ecfc25e951c9204b';
+        '0x422c5a96fe4a33351fbdad69e9c074b157c16e28c37801ddba19d665a256264e';
       const tx = new TransactionBlock();
       tx.moveCall({
-        target: `${packageObjectId}::digital_contract_20240521::create_contract`,
+        target: `${packageObjectId}::digital_contract_20241215::create_contract`,
         arguments: [
           tx.pure.address(
             '0x440a564c98eaa78c4f791a0d5642a833f32b8d33b71731ea35074435f04eb088'
