@@ -136,7 +136,7 @@ export function CreateLibraryDialog({ onSubmit, disabled }: CreateLibraryDialogP
         <DialogHeader className=" h-[10%] ">
           <DialogTitle>Create New Tech Title</DialogTitle>
           <div className="w-full flex items-center">
-            文字名称:
+            文章名称:
             <input
               className="w-[30%] bg-gray-100 px-2 py-1 ml-2 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={titleName}

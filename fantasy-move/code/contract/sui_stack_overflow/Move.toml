@@ -5,8 +5,8 @@ edition = "2024.beta" # edition = "legacy" to use legacy (pre-2024) Move
 # authors = ["..."]      # e.g., ["Joe Smith (joesmith@noemail.com)", "John Snow (johnsnow@noemail.com)"]
 
 [dependencies]
-Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "framework/testnet" }
-#Walrus = { git = "https://github.com/MystenLabs/walrus-docs.git", rev = "main", subdir = "contracts/walrus" }
+Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "testnet-v1.35.0" }
+Walrus = { local = "./walrus-docs/contracts/walrus" }
 # For remote import, use the `{ git = "...", subdir = "...", rev = "..." }`.
 # Revision can be a branch, a tag, and a commit hash.
 # MyRemotePackage = { git = "https://some.remote/host.git", subdir = "remote/path", rev = "main" }
@@ -27,6 +27,7 @@ sui_stack_overflow = "0x0"
 # alice = "0xA11CE"
 
 [dev-dependencies]
+#walrus = "0x9f992cc2430a1f442ca7a5ca7638169f5d5c00e0ebc3977a65e9ac6e497fe5ef"
 # The dev-dependencies section allows overriding dependencies for `--test` and
 # `--dev` modes. You can introduce test-only dependencies here.
 # Local = { local = "../path/to/dev-build" }

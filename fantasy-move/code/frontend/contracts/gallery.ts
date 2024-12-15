@@ -1,7 +1,6 @@
 import { suiClient } from "@/config";
 import { bcs } from "@mysten/sui/bcs";
 import { Transaction } from "@mysten/sui/transactions";
-import { isValidSuiObjectId } from "@mysten/sui/utils";
 
 
 
@@ -48,6 +47,7 @@ export type BlobInfo = {
 
 export const createTitle = async (networkVariables: NetworkVariables,blobId: string, name: string) => {
     const tx = new Transaction();
+
     tx.moveCall(
         {
             package: networkVariables.package,
@@ -60,6 +60,31 @@ export const createTitle = async (networkVariables: NetworkVariables,blobId: str
             ]
         }
     )
+    return tx;
+}
+
+
+export const rewordSui = async (networkVariables: NetworkVariables,
+    blobId: string, blobInfo: string, amount: string,suiCoinIds: string[]) => {
+    const tx = new Transaction();
+    let amountNum = Number(amount) * 100_000_000;
+    console.log(suiCoinIds)
+    tx.moveCall(
+        {
+            package: networkVariables.package,
+            module: "sui_stack_overflow",
+            function: "rewordSui",
+            arguments: [
+                tx.object(networkVariables.stack),
+                tx.pure(bcs.string().serialize(blobId).toBytes()),
+                tx.object(blobInfo),
+                tx.makeMoveVec({ elements: suiCoinIds.map((obj) => tx.object(obj)), }),
+                tx.pure.u64(amountNum),
+                
+            ]
+        }
+    )
+    tx.setGasBudget(900_000_000)
     return tx;
 }
 

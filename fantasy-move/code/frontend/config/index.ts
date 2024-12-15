@@ -9,8 +9,8 @@ const { networkConfig, useNetworkVariable, useNetworkVariables } = createNetwork
     testnet: {
         url: getFullnodeUrl("testnet"),
         variables: {
-            package: "0x9fb75841fe96eb97b49e4bf6f11313e6caddafa0730d773913eb94877cd4e502",
-            stack: "0x8b00b87007e151cd5ebc868d28d3d7f3a4eac1c929753a2620a55355107c2691",
+            package: "0x0aefed8383f9414ff436498c5ef3525431c0ae0d331470c4689c5e9f45073d0e",
+            stack: "0x451c9de72bd22fd01ccc75f13c993bfa7827668eaaddbb4c76b0fa32f300b16c",
             walrusPublish: "https://walrus-testnet-publisher.nodes.guru",
             walrusAggreator: "https://aggregator.walrus-testnet.walrus.space"
         },
