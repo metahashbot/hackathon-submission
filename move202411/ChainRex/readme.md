@@ -7,17 +7,16 @@
 - Rex  github: https://github.com/ChainRex
 > 自我介绍&技术栈:  
 浙江大学硕士研究生一年级在读，现在正在学习 Move 合约开发
-技术栈：Solidity, Move, Java, Go, Vue, React
+技术栈：Solidity, Move, Java, Go, Vue
 
 
-- YXZ  github: https://github.com/YXZ252426
+- Leo  github: https://github.com/YXZ252426
 > 自我介绍&技术栈:
-计算机科学与技术大二在读，希望通过这次学习机会真正融入WEB3生态，融入SUI生态
-技术栈: GO, JAVA, React, Python
+浙大链协技术部成员，前端技术栈react, typescript, next js后端技术栈go,cloudwego
 
 - Knight github: https://github.com/Knightofzero10
 > 自我介绍&技术栈:
-浙江大学学生区块链协会投研部部长，产品经理，SCA，NAVI，Suilend等借贷协议早期用户
+我是Knight，入行4年，主要从事二级市场投资和链上项目空投交互；目前是浙大链协投研部部长；曾在TON Foundation实习；当前在NFTgo工作。在该项目中主要负责市场赛道研究和竞品分析。
 
 - Ni1L github: https://github.com/BazingaJack
 > 自我介绍&技术栈:
@@ -26,4 +25,4 @@
 
 - Quantumae github: https://github.com/Quantumae
 > 自我介绍&技术栈:
-技术栈: C++, python
+我是Quantumae，刚入行；目前是浙大链协技术部部员；技术栈基本在html/css和C语言,对go也有一定的学习。
