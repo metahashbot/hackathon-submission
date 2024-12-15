@@ -9,9 +9,9 @@ import { CONSTANTS } from '@/constants/constants'
 dayjs.extend(relativeTime)
 
 const style = {
-  wrapper: `flex p-3 border-b border-[#38444d] min-w-0`,
-  profileImage: `rounded-full h-[40px] w-[40px] object-cover shrink-0`,
-  postMain: `flex-1 px-4 min-w-0`,
+  wrapper: `flex p-3 border-b border-[#38444d]`,
+  profileImage: `rounded-full h-[40px] w-[40px] object-cover`,
+  postMain: `flex-1 px-4 max-w-full`,
   headerDetails: `flex items-center`,
   name: `font-bold mr-1`,
   verified: `text-[0.8rem]`,

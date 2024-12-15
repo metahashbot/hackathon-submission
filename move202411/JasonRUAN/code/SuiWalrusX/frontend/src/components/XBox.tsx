@@ -127,8 +127,8 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
       // Upload image to Walrus if selected
       let uploadedBlobId: string | undefined;
       if (selectedImage) {
-        const fileContent = await selectedImage.text();
-        uploadedBlobId = await putData(fileContent);
+        const fileBuffer = await selectedImage.arrayBuffer();
+        uploadedBlobId = await putData(fileBuffer);
 
         if (!uploadedBlobId) {
           toast.error("Failed to upload image to Walrus");
@@ -227,11 +227,11 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
                   title="Upload Image"
                 />
               </label>
-              <RiFileGifLine className={style.icon} />
+              {/* <RiFileGifLine className={style.icon} />
               <RiBarChartHorizontalFill className={style.icon} />
               <BsEmojiSmile className={style.icon} />
               <IoMdCalendar className={style.icon} />
-              <MdOutlineLocationOn className={style.icon} />
+              <MdOutlineLocationOn className={style.icon} /> */}
             </div>
             <button
               type="submit"

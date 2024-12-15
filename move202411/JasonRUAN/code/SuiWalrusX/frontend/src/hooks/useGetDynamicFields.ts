@@ -30,7 +30,7 @@ export function useGetDynamicFields(tableId?: string) {
 
     if (isPending || !dynamicFields) {
       // toast.error("loading data...");
-      console.error("loading data...");
+      // console.error("loading data...");
       return;
     }
 

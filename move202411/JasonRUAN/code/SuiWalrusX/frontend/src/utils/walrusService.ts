@@ -1,11 +1,18 @@
 import { CONSTANTS } from "../constants/constants";
+import fs from 'fs';
 
-export const putData = async (data: string): Promise<string> => {
+export const putData = async (data: string | ArrayBuffer): Promise<string> => {
   try {
     const response = await fetch(CONSTANTS.WALRUS.PUBLISHER_URL + "/v1/store?epochs=100", {
       method: "PUT",
-      body: data,
+      body: data instanceof ArrayBuffer ? data : data,
     });
+
+    if (data instanceof ArrayBuffer) {
+      console.log("Binary data length:", data.byteLength);
+    } else {
+      console.log("Text data length:", data.length);
+    }
 
     const jsonResponse = await response.json();
 

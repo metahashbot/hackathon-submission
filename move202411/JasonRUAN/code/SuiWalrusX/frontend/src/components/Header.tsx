@@ -69,7 +69,7 @@ const Header = () => {
       >
         <Box className="flex flex-col items-center">
           <Heading className="flex items-center gap-3">SuiWalrusX</Heading>
-          <Text className="text-xs mt-1 text-gray-500">HOH mini hackathon by JasonRUAN</Text>
+          <Text className="text-xs mt-1 text-gray-500">HOH mini hackathon by rzexin</Text>
         </Box>
 
         <Box className="flex gap-5 items-center">
