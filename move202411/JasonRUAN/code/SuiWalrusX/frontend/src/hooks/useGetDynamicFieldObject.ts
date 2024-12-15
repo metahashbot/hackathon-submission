@@ -1,6 +1,5 @@
 import { useCurrentAccount, useSuiClientQuery } from "@mysten/dapp-kit";
 import { DynamicFieldName} from "@mysten/sui/client";
-import toast from "react-hot-toast";
 
 interface FieldItemProps {
   dynamic_field_name: DynamicFieldName;

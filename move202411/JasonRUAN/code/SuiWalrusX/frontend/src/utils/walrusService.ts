@@ -1,5 +1,4 @@
 import { CONSTANTS } from "../constants/constants";
-import fs from 'fs';
 
 export const putData = async (data: string | ArrayBuffer): Promise<string> => {
   try {

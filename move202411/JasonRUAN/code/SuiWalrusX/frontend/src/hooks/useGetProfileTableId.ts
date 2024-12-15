@@ -4,8 +4,6 @@ import { useGetObject } from "./useGetObject";
 export default function useGetProfileTableId() {
   const {
     data: sharedObject,
-    isPending,
-    error,
   } = useGetObject({
     objectId: CONSTANTS.SUI_WALRUSX_CONTRACT.WALRUSX_SHARED_OBJECT_ID,
   });

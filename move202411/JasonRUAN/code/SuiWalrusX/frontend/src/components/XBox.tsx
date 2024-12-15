@@ -1,8 +1,6 @@
 import { useState, useRef, useMemo } from "react";
-import { BsCardImage, BsEmojiSmile } from "react-icons/bs";
-import { RiFileGifLine, RiBarChartHorizontalFill } from "react-icons/ri";
-import { IoMdCalendar } from "react-icons/io";
-import { MdOutlineLocationOn, MdClose } from "react-icons/md";
+import { BsCardImage } from "react-icons/bs";
+import { MdClose } from "react-icons/md";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { useOwnedObjects } from "@/hooks/useOwnedObjects";
 import { CONSTANTS } from "@/constants/constants";

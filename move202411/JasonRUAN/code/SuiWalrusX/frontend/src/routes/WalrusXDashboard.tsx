@@ -5,7 +5,7 @@ import { useGetTweetObjects } from '@/hooks/useGetTweets';
 
 export default function WalrusXDashboard() {
 
-  const { data: sharedObject, isPending, error } = useGetObject({
+  const { data: sharedObject} = useGetObject({
     objectId: CONSTANTS.SUI_WALRUSX_CONTRACT.WALRUSX_SHARED_OBJECT_ID
   })
 

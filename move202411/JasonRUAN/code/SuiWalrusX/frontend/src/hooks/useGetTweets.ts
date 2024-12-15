@@ -1,5 +1,4 @@
 import { useCurrentAccount, useSuiClientQuery } from "@mysten/dapp-kit";
-import toast from "react-hot-toast";
 
 export function useGetTweetObjects(tweetsTableId?: string) {
     const account = useCurrentAccount();
