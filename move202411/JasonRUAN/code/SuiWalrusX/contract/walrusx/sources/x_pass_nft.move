@@ -25,7 +25,7 @@ module walrusx::x_pass_nft {
             utf8(b"{name}'s WalrusX Passport"),
             utf8(b"{image_url}"),
             utf8(b"HOH Mini Hackathon"),
-            utf8(b"JasonRUAN")
+            utf8(b"rzexin")
         ];
 
         let publisher = package::claim(otw, ctx);
