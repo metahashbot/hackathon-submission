@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import Section from "./Section";
 import { smallSphere, stars } from "../assets";
 import Heading from "./Heading";
 import PricingList from "./PricingList";
 import { LeftLine, RightLine } from "./design/Pricing";
+=======
+import Section from "./Section.jsx";
+import { smallSphere, stars } from "../assets/index.js";
+import Heading from "./Heading.jsx";
+import PricingList from "./PricingList.jsx";
+import { LeftLine, RightLine } from "./design/Pricing.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Pricing = () => {
   return (

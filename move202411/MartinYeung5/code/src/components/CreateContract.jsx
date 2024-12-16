@@ -1,7 +1,12 @@
 import { useCurrentAccount, useSuiClientQuery, useSignAndExecuteTransactionBlock } from "@mysten/dapp-kit";
 import { TransactionBlock } from '@mysten/sui.js/transactions';
+<<<<<<< HEAD
 import Button from "./Button";
 import FileUploaderMain from "./FileUploaderMain";
+=======
+import Button from "./Button.jsx";
+import FileUploaderMain from "./FileUploaderMain.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 import { useState } from 'react';
 import md5 from "md5";

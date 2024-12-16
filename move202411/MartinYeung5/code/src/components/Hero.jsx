@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { curve, heroBackground, robot } from "../assets";
 import Section from "./Section";
 import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero";
@@ -7,6 +8,17 @@ import { useRef } from "react";
 import Generating from "./Generating";
 import Notification from "./Notification";
 import CompanyLogos from "./CompanyLogos";
+=======
+import { curve, heroBackground, robot } from "../assets/index.js";
+import Section from "./Section.jsx";
+import { BackgroundCircles, BottomLine, Gradient } from "./design/Hero.jsx";
+import { heroIcons } from "../constants/index.js";
+import { ScrollParallax } from "react-just-parallax";
+import { useRef } from "react";
+import Generating from "./Generating.jsx";
+import Notification from "./Notification.jsx";
+import CompanyLogos from "./CompanyLogos.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 import { ConnectButton } from "@mysten/dapp-kit";
 import { useCurrentAccount, useSuiClientQuery, useSignAndExecuteTransactionBlock } from "@mysten/dapp-kit";
@@ -15,11 +27,19 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client';
 import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 
+<<<<<<< HEAD
 import CreateContract from "./CreateContract";
 import CreateMultisig from "./CreateMultisig";
 
 //import LoadContract from "./LoadContract";
 import LoadContract1 from "./LoadContract";
+=======
+import CreateContract from "./CreateContract.jsx";
+import CreateMultisig from "./CreateMultisig.jsx";
+
+//import LoadContract from "./LoadContract";
+import LoadContract1 from "./LoadContract.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Hero = () => {
   const parallaxRef = useRef(null);

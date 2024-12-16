@@ -1,11 +1,19 @@
 import { useLocation } from "react-router-dom";
 import { disablePageScroll, enablePageScroll } from "scroll-lock";
 
+<<<<<<< HEAD
 import { mylogo } from "../assets";
 import { navigation } from "../constants";
 import Button from "./Button";
 import MenuSvg from "../assets/svg/MenuSvg";
 import { HamburgerMenu } from "./design/Header";
+=======
+import { mylogo } from "../assets/index.js";
+import { navigation } from "../constants/index.js";
+import Button from "./Button.jsx";
+import MenuSvg from "../assets/svg/MenuSvg.jsx";
+import { HamburgerMenu } from "./design/Header.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 import { useState } from "react";
 
 const Header = () => {

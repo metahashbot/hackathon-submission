@@ -1,15 +1,28 @@
+<<<<<<< HEAD
 import Section from "./Section";
 import Heading from "./Heading";
 import { service1, service2, service3, check } from "../assets";
 import { brainwaveServices, brainwaveServicesIcons } from "../constants";
+=======
+import Section from "./Section.jsx";
+import Heading from "./Heading.jsx";
+import { service1, service2, service3, check } from "../assets/index.js";
+import { brainwaveServices, brainwaveServicesIcons } from "../constants/index.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 import {
   PhotoChatMessage,
   Gradient,
   VideoBar,
   VideoChatMessage,
+<<<<<<< HEAD
 } from "./design/Services";
 
 import Generating from "./Generating";
+=======
+} from "./design/Services.jsx";
+
+import Generating from "./Generating.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Services = () => {
   return (

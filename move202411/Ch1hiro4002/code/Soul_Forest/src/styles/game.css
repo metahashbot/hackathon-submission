@@ -1,0 +1,194 @@
+/* 页面背景及容器 */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('/assets/images/background.png') no-repeat center center; /* 添加背景图 */
+  background-size: cover; /* 背景图自动缩放以覆盖整个容器 */
+  text-align: center;
+  font-family: 'Press Start 2P', cursive; /* 使用相同的字体 */
+  position: relative; /* 确保背景图位于最底层 */
+  margin: 0; /* 去除容器外部的默认间距 */
+  padding: 0; /* 去除内部的默认间距 */
+}
+
+/* 右上角按钮的容器 */
+.button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10; /* 保证按钮在最上层 */
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 增加按钮之间的间距 */
+  justify-content: space-evenly; /* 使按钮均匀分布，任务按钮会自动居中 */
+  width: 130px; /* 增加宽度，确保按钮不会挤在一起 */
+}
+
+/* 按钮图标样式 */
+.button-container .button-icon {
+  font-size: 2rem;
+  color: #d9b7a1; /* 按钮图标颜色为柔和的米色 */
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s ease-in-out;
+}
+
+.button-container .button-icon:hover {
+  color: #4b6c3b; /* 悬停时变为柔和的墨绿色 */
+  transform: translateY(-3px); /* 轻微抬升效果 */
+}
+
+.button-container .button-icon:active {
+  transform: translateY(3px); /* 点击时稍微下沉 */
+}
+
+/* 角色属性弹窗 */
+.character-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(145deg, #2c3e50, #4b6c3b); /* 墨绿色渐变背景 */
+  border-radius: 12px;
+  padding: 25px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* 弹窗内容 */
+.character-modal .modal-content {
+  color: #d9b7a1;
+}
+
+.character-modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.character-modal button {
+  background-color: #4b6c3b; /* 墨绿色背景 */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
+}
+
+.character-modal button:hover {
+  background-color: #6e7e53; /* 悬停时亮一点的绿色 */
+}
+
+.character-modal button:active {
+  transform: translateY(2px); /* 按钮点击时的下沉效果 */
+}
+
+/* 任务弹窗 */
+.task-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85); /* 更深的背景 */
+  border-radius: 14px;
+  padding: 25px;
+  width: 80%;
+  max-width: 1000px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(145deg, #2c3e50, #4b6c3b); /* 墨绿色渐变背景 */
+}
+
+/* 任务卡片布局 */
+.task-modal .modal-content {
+  color: #d9b7a1;
+  font-family: 'Georgia', serif; /* 复古风格的字体 */
+}
+
+/* 任务弹窗的关闭按钮 */
+.task-modal .close-button {
+  position: absolute;
+  top: 1px;   /* 调整到顶部 */
+  right: 5px; /* 调整到右侧 */
+  font-size: 1.5rem;
+  color: #d9b7a1; /* 按钮颜色 */
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s ease-in-out;
+}
+
+/* 关闭按钮的悬停和点击效果 */
+.task-modal .close-button:hover {
+  color: #f39c12; /* 悬停时变成黄色 */
+  transform: scale(1.1); /* 稍微放大按钮 */
+}
+
+.task-modal .close-button:active {
+  transform: scale(0.95); /* 点击时按钮稍微缩小 */
+}
+
+/* 任务卡片样式 */
+.task-card {
+  width: 100%; /* 固定卡片宽度，填满容器 */
+  max-width: 300px; /* 最大宽度，避免卡片过大 */
+  background: linear-gradient(145deg, #34495e, #2c3e50); /* 墨绿色渐变背景 */
+  border: 10px solid transparent; /* 透明边框 */
+  border-radius: 20px; /* 更大圆角，去掉生硬感 */
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 添加阴影增强立体感 */
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25); /* 更柔和的阴影 */
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* 增加过渡 */
+}
+
+.task-card:hover {
+  transform: translateY(-10px); /* 悬停时更大幅度的抬升 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); /* 增加阴影效果 */
+}
+
+.task-card .task-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.task-card p {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.task-card button {
+  background-color: #4b6c3b; /* 墨绿色按钮 */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 15px;
+}
+
+.task-card button:hover {
+  background-color: #6e7e53; /* 悬停时亮一点的绿色 */
+}
+
+.task-card button:active {
+  transform: translateY(2px); /* 点击时稍微下沉 */
+}
+
+/* 通知容器 */
+.ToastContainer {
+  z-index: 10000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+

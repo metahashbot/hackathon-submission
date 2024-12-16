@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 import { benefits } from "../constants";
 import Heading from "./Heading";
 import Section from "./Section";
 import Arrow from "../assets/svg/Arrow";
 import { GradientLight } from "./design/Benefits";
 import ClipPath from "../assets/svg/ClipPath";
+=======
+import { benefits } from "../constants/index.js";
+import Heading from "./Heading.jsx";
+import Section from "./Section.jsx";
+import Arrow from "../assets/svg/Arrow.jsx";
+import { GradientLight } from "./design/Benefits.jsx";
+import ClipPath from "../assets/svg/ClipPath.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Benefits = () => {
   return (

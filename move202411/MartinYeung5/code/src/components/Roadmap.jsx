@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Button from "./Button";
 import Heading from "./Heading";
 import Section from "./Section";
@@ -5,6 +6,15 @@ import Tagline from "./Tagline";
 import { roadmap } from "../constants";
 import { check2, grid, loading1 } from "../assets";
 import { Gradient } from "./design/Roadmap";
+=======
+import Button from "./Button.jsx";
+import Heading from "./Heading.jsx";
+import Section from "./Section.jsx";
+import Tagline from "./Tagline.jsx";
+import { roadmap } from "../constants/index.js";
+import { check2, grid, loading1 } from "../assets/index.js";
+import { Gradient } from "./design/Roadmap.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Roadmap = () => (
   <Section className="overflow-hidden" id="roadmap">

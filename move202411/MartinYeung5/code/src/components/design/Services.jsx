@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { gradient, play } from "../../assets";
 import ChatBubbleWing from "../../assets/svg/ChatBubbleWing";
+=======
+import { gradient, play } from "../../assets/index.js";
+import ChatBubbleWing from "../../assets/svg/ChatBubbleWing.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 export const Gradient = () => {
   return (

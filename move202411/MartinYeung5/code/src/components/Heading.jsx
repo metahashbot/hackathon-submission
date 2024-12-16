@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import TagLine from "./Tagline";
+=======
+import TagLine from "./Tagline.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Heading = ({ className, title, text, tag }) => {
   return (

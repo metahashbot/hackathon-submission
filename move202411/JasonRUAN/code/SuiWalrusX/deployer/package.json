@@ -1,0 +1,27 @@
+{
+  "name": "deployer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "p": "npx ts-node tools/publish-contracts.ts",
+    "m_p": "npx ts-node tests/01_mint_profile.ts",
+    "c_t": "npx ts-node tests/02_create_tweet.ts",
+    "a_c": "npx ts-node tests/03_add_comment.ts",
+    "l_t": "npx ts-node tests/04_like_tweet.ts",
+    "f_u": "npx ts-node tests/05_follow_user.ts",
+    "r_t": "npx ts-node tests/06_retweet.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "22.10.1",
+    "fs": "0.0.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.6.2"
+  },
+  "dependencies": {
+    "@mysten/sui": "1.15.1"
+  }
+}
