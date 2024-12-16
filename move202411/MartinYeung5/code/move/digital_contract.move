@@ -44,8 +44,47 @@ module digital_contract::digital_contract_20241215 {
 	public struct Contract has key {
 		id: UID,
         contract_owner_cap: ID,
+		balance: Balance<SUI>,
+		tasks: vector<Task>, // will have many tasks
+        task_count: u64,
         contract_hash: String, // use the hashed data for the contract content and will update when the contract data is updated
+        //contract_record: Table, // add contract record to contract table
 	}
+
+    /*
+        one contract can have zero to many tasks.
+        * only contract creator can create
+        @param id - The object id of the task object.
+        @param contract - The object id of the contract.
+        @param service_provider - The address of service provider for the task.
+        @param title - The title of the task.
+        @param description - The description of the task.
+        @param budget - The budget of the task.
+        @param category - The category of the task.
+        @param status - The status of the task.
+    */
+
+    public struct Task has store {
+		id: u64,
+        contract: ID,
+		service_provider: address, 
+		title: String,
+		description: String,
+		budget: u64,
+        category: String,
+        status: u8
+	}
+
+    /*
+        Event to be emitted when a task is added to a contract.
+        @param contract_id - The id of the contract object.
+        @param task_id - The id of the task object.
+    */
+    public struct TaskAdded has copy, drop {
+        contract_id: ID,
+        task_id: u64,
+    }
+
 
     /*
         The contract owner capability struct represents the ownership of a contract. 
@@ -62,6 +101,35 @@ module digital_contract::digital_contract_20241215 {
         contract: ID,
     }
 
+    /*
+        The service provider struct represents the role in a contract. 
+        A service provider is a task's owner.
+        @param id - The id of the service provider object.
+        @param address - The address of the service provider.
+        @param service_provider_name - The name of the service provider.
+        @param description - The description of the service provider.
+        @param category - The category of the service provider.
+    */
+    public struct ServiceProvider has store {
+		id: u64,
+        address: u64,
+		service_provider_name: String,
+		description: String,
+        category: String
+	}
+
+    /*
+        The finished task struct represents a finished task record. 
+        @param id - The object id of the finsihed task object.
+        @param contract_id - The object id of the contract object.
+        @param service_provider_id - The id of the service provider object.
+    */
+    public struct FinishedTask has store {
+        id: UID,
+        contract_id: ID, 
+        service_provider_id: u64
+    }
+
     //==============================================================================================
     // Event structs
     //==============================================================================================
@@ -74,6 +142,76 @@ module digital_contract::digital_contract_20241215 {
     public struct ContractCreatedEvent has copy, drop {
         contract_id: ID,
         contract_owner_cap_id: ID,
+    }
+
+    /*
+        Event to be emitted when task is added to a contract.
+        @param contract_id - The id of the contract object.
+        @param task_id - The id of the task object.
+    */
+    public struct TaskAddedEvent has copy, drop {
+        contract_id: ID,
+        task_id: u64,
+    }
+
+    /*
+        Event to be emitted when service provider is added to a contract.
+        @param contract_id - The id of the contract object.
+        @param service_provider_id - The id of the service provider object.
+    */
+    public struct ServiceProviderAddedEvent has copy, drop {
+        contract_id: ID,
+        service_provider_id: u64,
+    }
+
+    /*
+        Event to be emitted when a user prepay the task budget from contract.
+        @param contract_id - The id of the contract object.
+        @param task_id - The id of the task object.
+        @param budget - The budget of task.
+        @param user_address - The address of the user of the task.
+        @param service_provider_address - The address of the service provider of the task.
+        @param owner - The address of the owner of the contract.
+        Remark:
+        * will not pay the fee directly to the service provider
+        * when the task is completed, service provider can have the right to get the fee
+    */
+    public struct PrePaidTaskEvent has copy, drop {
+        contract_id: ID,
+        task_id: u64,
+        budget: u64,
+        user_address: address,
+        service_provider_address: address,
+        owner: address
+    }
+
+    /*
+        Event to be emitted when task is finished.
+        @param contract_id - The id of the contract object.
+        @param task_id - The id of the task object.
+        @param user_address - The address of the user.
+        @param service_provider_address - The address of the task's service provider.
+    */
+    // ** owner can collection commission fee at final
+    // ** user will pay the budget to service provider who owns the task, and contract owner will get the commission fee from each tasks
+    // Question: 
+    public struct FinishedTaskEvent has copy, drop {
+        contract_id: ID,
+        task_id: u64, 
+        user_address: address,
+        service_provider_address: address
+    }
+
+    /*
+        Event to be emitted when a contract owner withdraws from their contract.
+        @param contract_id - The id of the contract object.
+        @param amount - The amount withdrawn.
+        @param owner - The address of the owner of the withdrawal.
+    */
+    public struct ContractWithdrawalEvent has copy, drop {
+        contract_id: ID,
+        amount: u64,
+        owner: address
     }
 
     //==============================================================================================
@@ -100,6 +238,9 @@ module digital_contract::digital_contract_20241215 {
         transfer::share_object(Contract {
             id: contract_uid,
             contract_owner_cap: contract_owner_cap_id,
+            balance: balance::zero<SUI>(),
+		    tasks: vector::empty(),
+            task_count: 0,
             contract_hash: contract_hash
         });
 
@@ -108,6 +249,199 @@ module digital_contract::digital_contract_20241215 {
            contract_owner_cap_id
         })
 	}
+
+    /*
+        Adds a new task to the contract and emits an TaskAdded event. 
+        Abort if the contract owner capability does not match.
+        @param contract - The contract to add the task to. (object id)
+        @param contract_owner_cap - The contract owner capability of the contract. (object id)
+        @param service_provider - The ID of the service provider.
+        @param title - The title of the task.
+        @param description - The description of the task.
+        @payment_coin - The object id of the Coin<SUI>.
+        @param budget - The price (u64 format) of the task.
+        @param category - The category of the task.
+        @param ctx - The transaction context.
+    */
+    public entry fun add_task(
+        contract: &mut Contract,
+        contract_owner_cap: &ContractOwnerCapability, 
+        service_provider: address,
+        title: vector<u8>,
+        description: vector<u8>,
+        payment_coin: &mut coin::Coin<SUI>, 
+        budget: u64,
+        category: String,
+        status: u8,
+        ctx: &mut TxContext
+    ) {
+        assert!(contract.contract_owner_cap== object::uid_to_inner(&contract_owner_cap.id), ENotContractOwner);
+        assert!(budget>0, EInvalidBudget);
+
+        let task_id = contract.tasks.length();
+
+         let value = payment_coin.value();
+         assert!(value >= budget, EInsufficientPayment);
+         let paid = payment_coin.split(budget, ctx);
+
+        coin::put(&mut contract.balance, paid);
+
+
+        let task = Task{
+            id: task_id,
+            contract: object::uid_to_inner(&contract.id),
+            service_provider: service_provider,
+            title: string::utf8(title),
+            description:string::utf8(description),
+            budget: budget,
+            category: category,
+            status: status,
+        };
+
+        contract.tasks.push_back(task);
+        contract.task_count = contract.task_count + 1;
+
+        event::emit(TaskAdded{
+            contract_id: contract_owner_cap.contract, 
+            task_id: task_id
+        });
+    }
+
+    /*
+        Add fund to specifci contract
+        @param contract - The contract to have the task.
+        @param payment_coin - The payment coin for the task.
+        @param budget - The amount of the coin.
+        @param ctx - The transaction context.
+    */
+    public entry fun add_fund_to_contract(
+        contract: &mut Contract,
+        payment_coin: &mut coin::Coin<SUI>, 
+        budget: u64,
+        ctx: &mut TxContext
+    ) {
+        assert!(budget>0, EInvalidBudget);
+        let value = payment_coin.value();
+        assert!(value >= budget, EInsufficientPayment);
+        let paid = payment_coin.split(budget, ctx);
+
+        coin::put(&mut contract.balance, paid);
+    }
+
+    /*
+        Pay for task from the contract and emits an PrePaidTaskEvent. 
+        Abort if the task id is invalid /
+        the payment coin is insufficient
+        @param contract - The contract to have the task.
+        @param task_id - The id of the task to pay.
+        @param user_address - The address of the user who pay for the task.
+        @param service_provider_address - The address of the service provider of the task.
+        @param owner - The address of the owner of the contract.
+        @param payment_coin - The payment coin for the task.
+        @param ctx - The transaction context.
+    */
+    public entry fun pay_for_task(
+        contract: &mut Contract, 
+        task_id: u64,
+        user_address: address,
+        service_provider_address: address,
+        payment_coin: &mut coin::Coin<SUI>,
+        owner: address,
+        ctx: &mut TxContext
+    ) {
+        assert!(task_id <= contract.tasks.length(), EInvalidTaskId);
+        
+        let task = &mut contract.tasks[task_id];
+        let value = payment_coin.value();
+        let task_budget = task.budget;
+        assert!(value >= task_budget, EInsufficientPayment);
+
+        let paid = payment_coin.split(task_budget, ctx);
+
+        coin::put(&mut contract.balance, paid);
+
+        event::emit(PrePaidTaskEvent {
+            contract_id: object::uid_to_inner(&contract.id),
+            task_id: task_id,
+            budget: task_budget,
+            user_address: user_address,
+            service_provider_address: service_provider_address,
+            owner: owner,
+        });
+        // issue: need to update task status !!!!
+        // vector::borrow_mut(&mut contract.tasks, task_id).status = paid;
+    }
+
+    public entry fun update_task_status(
+        contract: &mut Contract,
+        contract_owner_cap: &ContractOwnerCapability,
+        task_id: u64,
+        status: u8,
+        ctx: &mut TxContext
+    ) {
+        //assert!(service_provider == tx_context::sender(ctx), EInvalidWithdrawalAmount);
+        assert!(contract.contract_owner_cap== object::uid_to_inner(&contract_owner_cap.id), ENotContractOwner);
+
+        let task = &mut contract.tasks[task_id];
+        let task_service_provider = &mut task.service_provider;
+        let task_status = &mut task.status;
+        *task_status = status;
+
+    }
+
+    // 0 = start task, 2 = finished task, 3 = failed task
+    public entry fun withdraw_from_completed_task(
+        contract: &mut Contract,
+        task_id: u64,
+        ctx: &mut TxContext
+    ) {
+        //assert!(service_provider == tx_context::sender(ctx), EInvalidWithdrawalAmount);
+
+        let task = &mut contract.tasks[task_id];
+        let task_status = task.status;
+        
+        assert!(task_status == 2, EInvalidTaskStatus);
+
+        let task_budget = task.budget;
+        let service_provider = task.service_provider;
+        let take_coin = coin::take(&mut contract.balance, task_budget, ctx);
+
+        transfer::public_transfer(take_coin, service_provider);
+    }
+
+    /*
+        Withdraws SUI from the contract to the owner and emits a ContractWithdrawal event. 
+        Abort if the contract owner capability does not match the contract or if the amount is invalid.
+        All tasks should be completed.
+        
+        @param contract - The contract to withdraw from.
+        @param contract_owner_cap - The contract owner capability of the contract.
+        @param amount - The amount to withdraw.
+        @param owner - The address of the owner of the withdrawal.
+        @param ctx - The transaction context.
+    */
+
+    public entry fun withdraw_from_contract(
+        contract: &mut Contract,
+        contract_owner_cap: &ContractOwnerCapability,
+        amount: u64,
+        owner: address,
+        ctx: &mut TxContext
+    ) {
+        
+        assert!(contract.contract_owner_cap== object::uid_to_inner(&contract_owner_cap.id), ENotContractOwner);
+        assert!(amount > 0 && amount <= contract.balance.value(), EInvalidWithdrawalAmount);
+
+        let take_coin = coin::take(&mut contract.balance, amount, ctx);
+        
+        transfer::public_transfer(take_coin, owner);
+        
+        event::emit(ContractWithdrawalEvent{
+            contract_id: object::uid_to_inner(&contract.id),
+            amount: amount,
+            owner: owner
+        });
+    }
 
     //==============================================================================================
     // Getters
@@ -122,6 +456,18 @@ module digital_contract::digital_contract_20241215 {
         contract.contract_owner_cap
     }
 
+    public fun get_contract_balance(contract: &Contract):  &Balance<SUI> {
+        &contract.balance
+    }
+
+    public fun get_contract_tasks(contract: &Contract):  &vector<Task> {
+        &contract.tasks
+    }
+
+    public fun get_contract_task_count(contract: &Contract): u64{
+        contract.task_count
+    }
+
     // getters for the contract owner capability struct
     public fun get_contract_owner_cap_uid(contract_owner_cap: &ContractOwnerCapability): &UID {
         &contract_owner_cap.id
@@ -129,6 +475,61 @@ module digital_contract::digital_contract_20241215 {
 
     public fun get_contract_owner_cap_contract(contract_owner_cap: &ContractOwnerCapability): ID {
         contract_owner_cap.contract
+    }
+
+    // getters for the task struct
+    public fun get_task_id(task: &Task): u64 {
+        task.id
+    }
+
+    public fun get_task_title(task: &Task): String {
+        task.title
+    }
+
+    public fun get_task_description(task: &Task): String {
+        task.description
+    }
+
+    public fun get_task_budget(task: &Task): u64{
+        task.budget
+    }
+
+    public fun get_task_service_provider(task: &Task): address{
+        task.service_provider
+    }
+
+    public fun get_task_status(task: &Task): u8{
+        task.status
+    }
+
+    public fun get_task_category(task: &Task): String{
+        task.category
+    }
+
+    // getters for the payment for task struct
+    public fun get_pay_for_task_contract_id(paid_task: &FinishedTaskEvent): ID {
+        paid_task.contract_id
+    }
+
+    public fun get_pay_for_task_task_id(paid_task: &FinishedTaskEvent): u64 {    
+        paid_task.task_id
+    }
+
+    public fun get_pay_for_service_provider_address(paid_task: &FinishedTaskEvent): address {    
+        paid_task.service_provider_address
+    }
+
+    public fun get_pay_for_user_address(paid_task: &FinishedTaskEvent): address {    
+        paid_task.user_address
+    }
+
+    // getters for the service provider struct
+    public fun get_service_provider_contract_id(service_provider: &ServiceProviderAddedEvent): ID {    
+        service_provider.contract_id
+    }
+
+    public fun get_service_provider_service_provider_id(service_provider: &ServiceProviderAddedEvent): u64 {    
+        service_provider.service_provider_id
     }
 
 }
