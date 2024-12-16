@@ -1,0 +1,29 @@
+.gun-logo {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    /* 确保图标圆形 */
+    border: 10px solid red;
+    /* 外边框颜色 */
+    object-fit: cover;
+    /* 确保图片比例 */
+    background: linear-gradient(145deg, #ffffff, #e0e0e0);
+    /* 立体背景 */
+    box-shadow:
+        4px 4px 8px rgba(0, 0, 0, 0.3),
+        /* 外阴影 */
+        -4px -4px 8px rgba(255, 255, 255, 0.5),
+        /* 浮雕效果 */
+        inset 0px 4px 6px rgba(255, 255, 255, 0.5),
+        /* 高光 */
+        inset 0px -4px 6px rgba(0, 0, 0, 0.3);
+    /* 内嵌阴影 */
+    transform: rotate(19900deg);
+    transition: transform 0.6s ease-in-out;
+    /* 添加平滑过渡效果 */
+}
+
+.bullet-logo {
+    height: 70px;
+
+}
