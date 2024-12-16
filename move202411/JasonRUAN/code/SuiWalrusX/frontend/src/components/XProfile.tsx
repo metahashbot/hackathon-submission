@@ -78,7 +78,8 @@ const XProfile = ({ isOpen, onClose }: XProfileProps) => {
 
       await createProfile.mutateAsync({
         ...formData,
-        image: imageFile,
+        // image: imageFile,
+        image: previewFile,
         ipfsNFTHash,
       });
 

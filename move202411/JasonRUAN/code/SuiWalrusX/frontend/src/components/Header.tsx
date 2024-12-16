@@ -43,11 +43,17 @@ const Header = () => {
     return profileDynamicFieldObject;
   }, [profileDynamicFieldObject]);
 
-  const fields = profile?.data?.content?.dataType === "moveObject"
-    ? (profile.data.content.fields as any)
-    : undefined;
+  const { fields, ipfsUrl, } = useMemo(() => {
+    const fields = profile?.data?.content?.dataType === "moveObject"
+      ? (profile.data.content.fields as any)
+      : undefined;
 
-  const ipfsUrl = fields?.value?.fields?.ipfs_nft_url;
+    const ipfsUrl = fields?.value?.fields?.ipfs_nft_url;
+
+    const image_blob_id = fields?.value?.fields?.image_blob_id;
+
+    return { fields, ipfsUrl, image_blob_id };
+  }, [profile]);
 
   const handleProfileClick = () => {
     if (profile?.data?.content) {
