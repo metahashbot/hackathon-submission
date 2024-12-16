@@ -278,5 +278,12 @@ module sui_rog::role{
             role.role_data.fighting_system.attack_power = role.role_data.fighting_system.attack_power + 2;
         }
     }
+
+// ==================================================================================================================================================
+    // 签到
+    public entry fun sign_in(role: &mut Role, coin_pool: &mut CoinPool) {
+        let sign_in_balance = soul::withdraw_task_low_token(coin_pool);
+        balance::join(&mut role.role_data.wallet, sign_in_balance);
+    }
 }
 

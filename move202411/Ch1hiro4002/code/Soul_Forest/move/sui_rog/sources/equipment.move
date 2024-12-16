@@ -12,11 +12,14 @@ module sui_rog::equipment {
         name: String,
         attack: u64,
         creater: address,
+        url: String,
     }
+
+
 
     public struct EquipmentList has key, store {
         id: UID,
-        equipment: Table<String, Table<String, u64>>,
+        equipments: Table<String, Table<String, u64>>,
     }
  
     fun init(otw: EQUIPMENT, ctx: &mut TxContext) {
@@ -28,7 +31,7 @@ module sui_rog::equipment {
 
         let values: vector<String> = vector[
             utf8(b"{name}"),
-            utf8(b"https://oss-of-ch1hiro.oss-cn-beijing.aliyuncs.com/imgs/202412082132939.png"),
+            utf8(b"{url}"),
             utf8(b"{creater}"),
         ];
 
@@ -48,6 +51,7 @@ module sui_rog::equipment {
             name: name,
             attack: 3,
             creater: creater,
+            url: utf8(b"https://oss-of-ch1hiro.oss-cn-beijing.aliyuncs.com/imgs/202412082132939.png")
         }
 
     }
