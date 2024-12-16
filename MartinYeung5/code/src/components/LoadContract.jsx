@@ -8,7 +8,11 @@ export default function LoadContract1() {
         {
             owner: '0x440a564c98eaa78c4f791a0d5642a833f32b8d33b71731ea35074435f04eb088',
             filter: {
-                StructType: "0x422c5a96fe4a33351fbdad69e9c074b157c16e28c37801ddba19d665a256264e::digital_contract_20240521::Contract",
+                StructType: "0x422c5a96fe4a33351fbdad69e9c074b157c16e28c37801ddba19d665a256264e::digital_contract_20241215::ContractOwnerCapability",
+            },
+            options: {
+              showOwner: true,
+              showType: true,
             },
 
         }
@@ -23,5 +27,12 @@ export default function LoadContract1() {
         return <div>Loading...</div>;
     }
 
-    return <pre>{JSON.stringify(data, null, 2)}</pre>;
+    return <pre>{/*JSON.stringify(data.data[0].data.objectId, null, 2)*/}
+    <div>
+        <div>contract record</div>
+        {data.data.map((data) => (
+            <li key={data}>{data.data.objectId}</li>
+        ))}
+    </div>
+    </pre>;
 }

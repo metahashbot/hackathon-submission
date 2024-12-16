@@ -73,7 +73,7 @@ const Hero = () => {
             <div>Wallet not connected</div>
           )}
           <CreateContract />
-          <CreateMultisig />
+          {/*<CreateMultisig />*/}
           <LoadContract1 />
           {/*<div>
             {data?.data.map((object) => (
