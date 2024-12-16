@@ -1,0 +1,125 @@
+/* Home.tsx 的样式文件 */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: url('/assets/images/background.png') no-repeat center center; /* 添加背景图 */
+  background-size: cover; /* 背景图自动缩放以覆盖整个容器 */
+  text-align: center;
+  padding: 20px;
+  font-family: 'Press Start 2P', cursive;
+  position: relative; /* 确保背景图位于最底层 */
+}
+
+.game-title h1 {
+  font-size: 3rem;
+  color: #f3e0a5;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6), 3px 3px 0 rgba(0, 0, 0, 0.8);
+  letter-spacing: 5px;
+  margin-bottom: 20px;
+}
+
+.game-description p {
+  font-size: 1.2rem;
+  color: #f1e6a5;
+  margin-bottom: 30px;
+}
+
+.start-button {
+  padding: 12px 25px;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #7d8f4f;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-button:hover {
+  background-color: #5a7439;
+  transform: translateY(-2px);
+}
+
+.start-button:active {
+  transform: translateY(2px);
+}
+
+/* 右上角的连接按钮 */
+.connect-button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10; /* 保证按钮在最上层 */
+}
+
+/* 加载条的容器样式 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.9); /* 背景变得更加透明 */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000; /* 确保加载条位于顶部 */
+}
+
+/* 加载文本样式 */
+.loading-container p {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #4a90e2; /* 使用一种柔和的蓝色 */
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeIn 1s ease-out;
+}
+
+/* 加载条的进度条样式 */
+.progress-bar-container {
+  width: 80%;
+  height: 30px;
+  background-color: #e6e6e6; /* 进度条背景颜色设为不透明的灰色 */
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+/* 加载条的进度条样式 */
+.progress-bar {
+  height: 100%;
+  width: 0%; /* 初始宽度为0 */
+  background-color: #4a90e2; /* 进度条的颜色 */
+  border-radius: 20px;
+  animation: loadProgress 5s linear forwards; /* 动画持续5秒，结束时停在最后 */
+}
+
+/* 加载条的动画 */
+@keyframes loadProgress {
+  0% {
+    width: 0%;
+  }
+  95% {
+    width: 95%; /* 在95%时卡住 */
+  }
+  100% {
+    width: 100%; /* 直到 100% */
+  }
+}
+
+/* 加载文本的动画效果 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
