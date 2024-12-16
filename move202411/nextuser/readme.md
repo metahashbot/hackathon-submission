@@ -22,7 +22,7 @@
 - [web界面](./demo/react-app)
 
 ### web 网站
--[储蓄有奖](https://deposit-bonus-gamma.vercel.app/)
+-[存钱有奖](https://deposit-bonus-gamma.vercel.app/)
 
 
 ## Member
