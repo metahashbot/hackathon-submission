@@ -18,29 +18,9 @@ import { Ed25519Keypair } from '@mysten/sui.js/keypairs/ed25519';
 import CreateContract from "./CreateContract";
 import CreateMultisig from "./CreateMultisig";
 
-/*const keypair = new Ed25519Keypair();
-const client = new SuiClient({
-  url: getFullnodeUrl('testnet'),
-});
-const packageObjectId = '0xaa6a9e400c302ef1330aa1bca1881f71179ac3f6b81648b9ecfc25e951c9204b';
-const tx = new TransactionBlock();
+//import LoadContract from "./LoadContract";
+import LoadContract1 from "./LoadContract";
 
-let gasCoin = tx.gas;
-let gasFractions = tx.splitCoins(gasCoin, tx.pure(100));
-tx.setGas(gasFractions[0]);
-
-tx.moveCall({
-  target: `${packageObjectId}::digital_contract_20240521::create_contract`,
-  arguments: [tx.pure.address('0x440a564c98eaa78c4f791a0d5642a833f32b8d33b71731ea35074435f04eb088'), tx.pure.string('hashed_a20240524')],
-});
-
-const result = await client.signAndExecuteTransactionBlock({
-  signer: keypair,
-  transactionBlock: tx
-});
-
-console.log({ result });
-*/
 const Hero = () => {
   const parallaxRef = useRef(null);
   const account = useCurrentAccount();
@@ -94,6 +74,7 @@ const Hero = () => {
           )}
           <CreateContract />
           <CreateMultisig />
+          <LoadContract1 />
           {/*<div>
             {data?.data.map((object) => (
               <div key={object.data?.objectId}>
