@@ -48,7 +48,6 @@ module digital_contract::digital_contract_20241215 {
 		tasks: vector<Task>, // will have many tasks
         task_count: u64,
         contract_hash: String, // use the hashed data for the contract content and will update when the contract data is updated
-        //contract_record: Table, // add contract record to contract table
 	}
 
     /*
