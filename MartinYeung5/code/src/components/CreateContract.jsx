@@ -88,7 +88,7 @@ export default function CreateContract() {
         {isFilePicked?(<>File is hashed</>):(<>Waiting to upload file</>)}
         <br />
         <br />
-        <Button onClick={demo}>Create Contract</Button>
+        <Button onClick={demo}>Upload Contract</Button>
       </div>
     </main>
   );
