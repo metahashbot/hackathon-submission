@@ -1,0 +1,9 @@
+export const PackageID = "0x9e8c7736e69d72514a40242fbfa90898272a9cb88247394a8a1243f3ac7819b7"
+export const UpgradeCap = "0x863d2cb738e38b736c7b19562c46eb4d7ab38f88187172d98b4928603b9c4b47"
+export const AdminList = "0x9729f48cf7f9b1bee77d0a31784fabc6af2287c7b6e01d587b4d0d664d3b72a7"
+export const ProblemList = "0x3982f4cbea35ed65f193e1fd830fca28bdfa93da4ec5cd42e897aa3e63e5c394"
+export const PersonList = "0xbe3a1b5cf14d7a97395b87fea5006287491bed83d57a86ffbe702905aa968121"
+export const ShareList = "0x0a0edaca9047dee160d839a5c987c3ed1a34eccb057ac3f51000eaa7051295c8"
+export const Publisher = "0x6366c0fc01903e718491595fe37e72d474139e4e1c0a490a39921cdddbeafdd5"
+export const Display = "0x6c425fea263342b5b74630d1a2c5fad22a52ea0b9c60c6986a0eece2e515d43a"
+export const MoveCallAddProblem = `${PackageID}::problem::add_problem`

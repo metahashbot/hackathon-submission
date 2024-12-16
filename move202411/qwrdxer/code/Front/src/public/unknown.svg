@@ -1,0 +1,9 @@
+<svg width="300" height="600" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_12" d="m27,159.5l244,0l0,420l-244,0l0,-420z" opacity="undefined" stroke="#000" fill="#ffffff"/>
+  <path stroke="#000" id="svg_16" d="m27.185,159.2025l46.125,-98l153.75,0l46.12498,98l-245.99997,0z" fill="#BBBBBB"/>
+  <text xml:space="preserve" text-anchor="start" font-family="'Fira Code'" font-size="240" stroke-width="0" id="svg_19" y="443.5" x="89" stroke="#000" fill="#000000">？</text>
+ </g>
+</svg>
