@@ -1,0 +1,9 @@
+**您上传的 $\mathit{Package}$ 需要满足以下规则：**
+
+1. `sui move new main`创建，或拥有等价的包结构，其中测试相关的文件/目录是非必须的。
+
+2. 在`main.move`文件中编码，$\mathit{OJ}$ 将调取其中的`main`函数，并按照测试数据中指定的格式传参。
+
+3. 按照题目要求，将答案存入`public struct Main has key {}`中并将所有权移交调用者，或者通过`public struct MainEvent has copy, drop {}`触发事件，内部具体格式可能会根据各个题目要求而变动。
+
+4. 当您将其发布到 $\mathit{Sui}\ \mathit{Testnet}$ 上之后，在对应的题目详情页右侧输入您获得的 $\mathit{PackageID}$ 提交即可自动判题。
