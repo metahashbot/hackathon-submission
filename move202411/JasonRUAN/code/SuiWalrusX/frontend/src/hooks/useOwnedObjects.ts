@@ -25,7 +25,7 @@ export function useOwnedObjects({ structType }: UseOwnedObjectsProps = {}) {
     }
   }, {
     enabled: !!account,
-    refetchInterval: 5000, // 每5秒自动刷新一次
+    refetchInterval: 1000, // 每5秒自动刷新一次
   });
 
   return {

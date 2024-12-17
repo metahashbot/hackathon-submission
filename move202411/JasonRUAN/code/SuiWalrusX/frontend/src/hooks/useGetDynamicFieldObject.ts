@@ -20,6 +20,7 @@ export function useGetDynamicFieldObject({ dynamic_field_name, tableId }: FieldI
       },
       {
         enabled: !!account && !!tableId && !!dynamic_field_name,
+        refetchInterval: 1000,
       },
     );
 

@@ -23,8 +23,8 @@ export function useCreateXProfile() {
         throw new Error("You need to connect your wallet first pls!");
       }
 
-      const fileContent = await info.image.text();
-      const blob_id = await putData(fileContent);
+      const fileContentBuffer = await info.image.arrayBuffer();
+      const blob_id = await putData(fileContentBuffer);
 
       const txb = new Transaction();
       const ipfs_nft_url = `ipfs://${info.ipfsNFTHash}`;

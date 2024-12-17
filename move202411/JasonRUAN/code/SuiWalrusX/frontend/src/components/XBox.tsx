@@ -38,7 +38,6 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
   const [isPosting, setIsPosting] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [blobId, setBlobId] = useState<string | null>(null);
   const [isOverLimit, setIsOverLimit] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -63,12 +62,15 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
     return profileDynamicFieldObject;
   }, [profileDynamicFieldObject]);
 
-  const fields =
-    profile?.data?.content?.dataType === "moveObject"
+  const { fields, ipfsUrl } = useMemo(() => {
+    const fields = profile?.data?.content?.dataType === "moveObject"
       ? (profile.data.content.fields as any)
       : undefined;
 
-  const ipfsUrl = fields?.value?.fields?.ipfs_nft_url;
+    const ipfsUrl = fields?.value?.fields?.ipfs_nft_url;
+
+    return { fields, ipfsUrl };
+  }, [profile]);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -99,7 +101,6 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
   const removeImage = () => {
     setSelectedImage(null);
     setImagePreview(null);
-    setBlobId(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -133,7 +134,6 @@ const XBox = ({ onPostSuccess }: XBoxProps) => {
           return;
         }
 
-        setBlobId(uploadedBlobId);
         console.log("Uploaded Image Blob ID:", uploadedBlobId);
       }
 

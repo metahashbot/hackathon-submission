@@ -15,7 +15,7 @@ const XFeed = ({ dynamic_field_page, tweetsTableId }: TweetListProps) => {
       parentId: tweetsTableId,
     },
     {
-      refetchInterval: 5000,
+      refetchInterval: 1000,
     },
   );
 
