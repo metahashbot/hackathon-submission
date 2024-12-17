@@ -2,6 +2,7 @@
 
 import { cn } from "~/lib/utils";
 import { ConnectBtn } from "~/components/connect-btn";
+import { HeaderNav } from "~/components/header-nav";
 import { usePathname } from "next/navigation";
 
 export function Header() {
@@ -20,6 +21,7 @@ export function Header() {
         </div>
         <span className="text-xl font-bold">HCSC</span>
       </div>
+      <HeaderNav />
       <ConnectBtn />
     </header>
   );

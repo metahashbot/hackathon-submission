@@ -14,26 +14,6 @@ import {
 } from "recharts";
 import { UseData } from '../../../hooks/detailHook'
 
-// const data = [
-//   { date: "11/20", value: 5 },
-//   { date: "11/21", value: 4 },
-//   { date: "11/22", value: 6 },
-//   { date: "11/23", value: 5 },
-//   { date: "11/24", value: 7 },
-//   { date: "11/25", value: 5 },
-//   { date: "11/26", value: 6 },
-//   { date: "11/27", value: 4 },
-//   { date: "11/28", value: 5 },
-//   { date: "11/29", value: 6 },
-// ];
-
-// const bloodMetrics = [
-//   { title: "White Blood Cells", value: "7.2", unit: "" },
-//   { title: "Red Blood Cells", value: "4.43", unit: "" },
-//   { title: "Globulins", value: "150", unit: "RBC" },
-//   { title: "C-Reactive Protein", value: "4.43", unit: "RBC" },
-// ];
-
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString)
@@ -64,10 +44,10 @@ export default function MedicalDashboard() {
     const latestReport = getLatestReport(sortedReports);
 
     const bloodMetrics = [
-      { title: '白细胞', value: latestReport.wbc, unit: '' },
-      { title: '红细胞', value: latestReport.rbc, unit: '' },
-      { title: '血小板', value: latestReport.platelets, unit: '' },
-      { title: 'C反应蛋白', value: latestReport.crp, unit: '' },
+      { title: '白细胞', value: latestReport.wbc, unit: '', path: 'wbc.jfif' },
+      { title: '红细胞', value: latestReport.rbc, unit: '', path: 'rbc.png' },
+      { title: '血小板', value: latestReport.platelets, unit: '', path: 'platelets.png' },
+      { title: 'C反应蛋白', value: latestReport.crp, unit: '', path: 'crp.jpg' },
     ]
 
     return (
@@ -128,7 +108,7 @@ export default function MedicalDashboard() {
                     <span className="text-sm text-gray-500">{metric.unit}</span>
                   </div>
                   <img
-                    src={`/img${index}.png`}
+                    src={`/${metric.path}`}
                     alt="红细胞"
                     className="w-full h-full object-contain"
                   />

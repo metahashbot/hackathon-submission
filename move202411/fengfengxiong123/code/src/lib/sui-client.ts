@@ -1,4 +1,4 @@
-import { SuiClient } from "@mysten/sui.js/client";
+import { SuiClient } from "@mysten/sui/client";
 
 const suiClientSingleton = () => {
   return new SuiClient({ url: "https://fullnode.testnet.sui.io" });
