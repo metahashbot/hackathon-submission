@@ -1,114 +1,122 @@
-import { useState, useEffect } from 'react';
-import { useWallet } from './providers/wallet-provider';
-import { TransactionBlock } from '@mysten/sui.js/transactions';
+import { useState } from 'react';
+import { calculateZodiacSign } from '@/lib/zodiac';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CalendarIcon } from '@heroicons/react/24/outline';
+import { zodiacIcons } from '@/lib/zodiacIcons';
 
+export type ElementType = 'fire' | 'earth' | 'air' | 'water';
 
-// 星座元素枚举
-export enum ElementType {
-    FIRE = 1,
-    EARTH = 2,
-    AIR = 3,
-    WATER = 4
+interface Props {
+  onElementSelect: (element: ElementType) => void;
 }
 
-// 星座信息类型
-type ZodiacInfo = {
-    sign: string;
-    element: ElementType;
-};
+export function ZodiacSelector({ onElementSelect }: Props) {
+  const [birthDate, setBirthDate] = useState('');
+  const [zodiacSign, setZodiacSign] = useState<string>();
+  const [error, setError] = useState('');
 
-export function ZodiacSelector({ onElementSelect }: ZodiacSelectorProps) {
-    const [selectedZodiac, setSelectedZodiac] = useState<string>('');
-    const [amount, setAmount] = useState('');
-    const { address, signAndExecuteTransaction } = useWallet();
+  const validateDate = (date: string) => {
+    const selectedDate = new Date(date);
+    const today = new Date();
+    
+    if (selectedDate > today) {
+      setError('Birth date cannot be in the future');
+      return false;
+    }
+    
+    if (selectedDate.getFullYear() < 1900) {
+      setError('Please select a date after 1900');
+      return false;
+    }
+    
+    setError('');
+    return true;
+  };
 
-    // 星座信息映射
-    const zodiacData: { [key: string]: ZodiacInfo } = {
-        '白羊座': { sign: '白羊座', element: ElementType.FIRE },
-        '金牛座': { sign: '金牛座', element: ElementType.EARTH },
-        '双子座': { sign: '双子座', element: ElementType.AIR },
-        '巨蟹座': { sign: '巨蟹座', element: ElementType.WATER },
-        '狮子座': { sign: '狮子座', element: ElementType.FIRE },
-        '处女座': { sign: '处女座', element: ElementType.EARTH },
-        '天秤座': { sign: '天秤座', element: ElementType.AIR },
-        '天蝎座': { sign: '天蝎座', element: ElementType.WATER },
-        '射手座': { sign: '射手座', element: ElementType.FIRE },
-        '摩羯座': { sign: '摩羯座', element: ElementType.EARTH },
-        '水瓶座': { sign: '水瓶座', element: ElementType.AIR },
-        '双鱼座': { sign: '双鱼座', element: ElementType.WATER },
+  const handleDateChange = (date: string) => {
+    setBirthDate(date);
+    
+    if (!date) {
+      setZodiacSign(undefined);
+      return;
+    }
+
+    if (!validateDate(date)) {
+      setZodiacSign(undefined);
+      return;
+    }
+
+    const sign = calculateZodiacSign(new Date(date));
+    setZodiacSign(sign);
+    
+    const elementMap: Record<string, ElementType> = {
+      'Aries': 'fire', 'Leo': 'fire', 'Sagittarius': 'fire',
+      'Taurus': 'earth', 'Virgo': 'earth', 'Capricorn': 'earth', 
+      'Gemini': 'air', 'Libra': 'air', 'Aquarius': 'air',
+      'Cancer': 'water', 'Scorpio': 'water', 'Pisces': 'water'
     };
+    
+    if(sign) {
+      onElementSelect(elementMap[sign]);
+    }
+  };
 
-    const zodiacInfo = selectedZodiac ? zodiacData[selectedZodiac] : { sign: '', element: ElementType.FIRE };
-
-    const handleZodiacChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedZodiac(event.target.value);
-    };
-
-    const getElementName = (element: ElementType): string => {
-        switch (element) {
-            case ElementType.FIRE: return "火";
-            case ElementType.EARTH: return "土";
-            case ElementType.AIR: return "风";
-            case ElementType.WATER: return "水";
-            default: return "未知";
-        }
-    };
-    const handleStake = async () => {
-        if (!address || !amount) return;
-
-        try {
-            const tx = new TransactionBlock();
-            const [coin] = tx.splitCoins(tx.gas, [tx.pure(Number(amount))]);
-
-            tx.moveCall({
-                target: `${process.env.NEXT_PUBLIC_PACKAGE_ID}::staking_pool::stake`,
-                arguments: [
-                    coin,
-                    tx.pure(Number(amount)),
-                    tx.pure(30), // 默认锁定期30天
-                    tx.pure(zodiacInfo.element),
-                ],
-            });
-
-            const result = await signAndExecuteTransaction({
-                transaction: tx,
-            });
-
-            console.log('Staking successful:', result);
-            setAmount('');
-        } catch (error) {
-            console.error('Staking failed:', error);
-        }
-    };
-
-    useEffect(() => {
-        onElementSelect(zodiacInfo.element);
-    }, [zodiacInfo.element, onElementSelect]);
-
-    return (
-        <div className="bg-white/5 backdrop-blur-sm rounded-lg p-6">
-            <h2 className="text-2xl font-bold mb-6">选择你的星座</h2>
-            <div className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium mb-2">星座</label>
-                    <select
-                        value={selectedZodiac}
-                        onChange={handleZodiacChange}
-                        className="w-full p-3 bg-white/10 rounded-lg focus:ring-2 focus:ring-primary"
-                    >
-                        <option value="">请选择</option>
-                        {Object.keys(zodiacData).map((sign) => (
-                            <option key={sign} value={sign}>{sign}</option>
-                        ))}
-                    </select>
-                </div>
-                {zodiacInfo.sign && (
-                    <div className="text-lg">
-                        <p>你的星座: {zodiacInfo.sign}</p>
-                        <p>元素: {getElementName(zodiacInfo.element)}</p>
-                    </div>
-                )}
-            </div>
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white/5 backdrop-blur-sm rounded-lg p-6"
+    >
+      <h2 className="text-2xl font-bold mb-6">Select Your Birth Date</h2>
+      <div className="space-y-4">
+        <div className="relative">
+          <label className="block text-sm font-medium mb-2">Birth Date</label>
+          <div className="relative">
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => handleDateChange(e.target.value)}
+              className="w-full p-3 pl-10 bg-white/10 rounded-lg focus:ring-2 focus:ring-primary hover:bg-white/15 transition-colors"
+              max={new Date().toISOString().split('T')[0]}
+              min="1900-01-01"
+            />
+            <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          </div>
+          <AnimatePresence>
+            {error && (
+              <motion.p
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="text-red-500 text-sm mt-1"
+              >
+                {error}
+              </motion.p>
+            )}
+          </AnimatePresence>
         </div>
-    );
+        <AnimatePresence>
+          {zodiacSign && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="mt-4 p-4 bg-white/10 rounded-lg"
+            >
+              <div className="flex items-center gap-3">
+                {zodiacIcons[zodiacSign] && (
+                  <div className="w-8 h-8">
+                    {zodiacIcons[zodiacSign]}
+                  </div>
+                )}
+                <p className="text-lg">
+                  Your Zodiac Sign: <span className="font-bold">{zodiacSign}</span>
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
 }
