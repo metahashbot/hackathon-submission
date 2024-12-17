@@ -18,6 +18,12 @@ public struct AdminCap has key, store {
 fun init(ctx: &mut TxContext) {
     let admin_cap = AdminCap { id: object::new(ctx) };
     transfer::public_transfer(admin_cap, ctx.sender());
+    transfer::share_object(
+        PointsRecord{
+            id: object::new(ctx),
+            record: table::new(ctx)
+        }
+    );
 }
 
 public fun update_points(_admin_cap: &AdminCap, points_record: &mut PointsRecord, new_points: u64, player: address) {
