@@ -9,10 +9,16 @@ import { Transaction } from "@mysten/sui/transactions";
 import { Button, Input, Typography, Spin, Card, Col, Row, notification, Tag, List } from "antd";
 import { useNetworkVariable } from "./networkConfig";
 import { useState, useEffect } from "react";
+import { useMarket } from './MarketContext'; // 引入 useMarket
+import { useParams } from 'react-router-dom';
 
 const { Title, Text } = Typography;
 
-export function Market({ id }: { id: string }) {
+export function Market() {
+  const { id } = useParams(); // 获取路由参数中的 id
+  const { objectId } = useMarket();
+  console.log("当前的 Object ID:", objectId);
+
   const counterPackageId = useNetworkVariable("counterPackageId");
   const suiClient = useSuiClient();
   const currentAccount = useCurrentAccount();

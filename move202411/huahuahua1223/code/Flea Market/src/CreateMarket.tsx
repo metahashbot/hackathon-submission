@@ -3,12 +3,10 @@ import { Button, Container } from "@radix-ui/themes";
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
 import { useNetworkVariable } from "./networkConfig";
 import ClipLoader from "react-spinners/ClipLoader";
+import { useMarket } from './MarketContext'; // 引入 useMarket
+import { useNavigate, Link } from 'react-router-dom'; // 引入 Link 和 useNavigate
 
-export function CreateMarket({
-  onCreated,
-}: {
-  onCreated: (id: string) => void;
-}) {
+export function CreateMarket() {
   const counterPackageId = useNetworkVariable("counterPackageId");
   const suiClient = useSuiClient();
   const {
@@ -16,6 +14,8 @@ export function CreateMarket({
     isSuccess,
     isPending,
   } = useSignAndExecuteTransaction();
+  const { setObjectId, marketIds, addMarketId } = useMarket(); // 使用 useMarket 获取 setObjectId 和 marketIds
+  const navigate = useNavigate(); // 创建 navigate 函数实例
 
   function create() {
     const tx = new Transaction();
@@ -38,7 +38,10 @@ export function CreateMarket({
             },
           });
 
-          onCreated(effects?.created?.[0]?.reference?.objectId!);
+          const newObjectId = effects?.created?.[0]?.reference?.objectId!;
+          setObjectId(newObjectId); // 设置 objectId 到 Context
+          addMarketId(newObjectId);
+          navigate(`/market/${newObjectId}`); // 使用 navigate 跳转到市场页面，并传递 objectId
         },
       },
     );
@@ -55,6 +58,16 @@ export function CreateMarket({
       >
         {isSuccess || isPending ? <ClipLoader size={20} /> : "开启市场"}
       </Button>
+      <div>
+        <h3>已创建的市场:</h3>
+        <ul>
+          {marketIds.map(id => (
+            <li key={id}>
+              <Link to={`/market/${id}`}>{id}</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Container>
   );
 }
