@@ -47,8 +47,13 @@ module sui_rog::soul {
     }
 
     // 从池子中取出低级任务的 token 奖励
-    public fun withdraw_task_low_token(coin_pool: &mut CoinPool): Balance<SOUL> {
+    public(package) fun withdraw_task_low_token(coin_pool: &mut CoinPool): Balance<SOUL> {
         balance::split<SOUL>(&mut coin_pool.value, 3)
+    }
+
+    // 签到
+    public(package) fun withdraw_sign_in_token(coin_pool: &mut CoinPool): Balance<SOUL> {
+        balance::split<SOUL>(&mut coin_pool.value, 1)
     }
 
 }

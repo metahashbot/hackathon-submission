@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
 import { ToastContainer, toast } from 'react-toastify';
-import { FaUserAlt, FaHome, FaTasks } from 'react-icons/fa';
+import { FaUserAlt, FaHome, FaTasks, FaCalendar, FaBriefcase  } from 'react-icons/fa';
 import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
 import { ROLE_STRUCT_TYPE, TESTNET_COUNTER_PACKAGE_ID, MONSTER_STRUCT_TYPE, COIN_POOL, SWORD_STRUCT_TYPE } from '../constants';
 import { receive_task_low } from '../interaction/receive_task_low'; 
@@ -15,7 +15,8 @@ import { check_task_low } from '../interaction/check_task_low';
 import { send_rewards_low } from '../interaction/send_rewards_low';
 import { put_on_ep } from '../interaction/put_on_ep';
 import { take_off_ep } from '../interaction/take_off_ep';
-import { up_level } from '../interaction/up_level'
+import { up_level } from '../interaction/up_level';
+import { sign_in } from '../interaction/sign_in';
 
 declare global {
   namespace Phaser {
@@ -43,56 +44,23 @@ const Game: React.FC = () => {
   const counterPackageId = TESTNET_COUNTER_PACKAGE_ID;
   const [isCharacterModalOpen, setIsCharacterModalOpen] = useState(false);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [isCreateMonster, setIsCreateMonster] = useState(true);
   const [playerData, setPlayerData] = useState<any>({});
   const [monstersData, setMonsterData] = useState<any>({}); 
   const [tasks, setTasks] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [RoleObjectId, setRoleObjectId] = useState<string | null>(null);
   const { mutate: signAndExecute } = useSignAndExecuteTransaction();
+  const [swordObjectId, setSwordObjectId] = useState<string | null>(null); // 保存装备状态
+  const [swordData, setSwordData] = useState<any>({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBackpackOpen, setIsBackpackOpen] = useState(false); // 控制背包模态框的状态
+const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的物品
   const navigate = useNavigate();
 
   const client = new SuiClient({
     url: getFullnodeUrl('testnet'),
   });
-
-  useEffect(() => {
-    if (!account) return;
-
-    const checkAndCreateMonster = async () => {
-      try {
-        const objectList = await client.getOwnedObjects({
-          owner: account.address,
-          filter: { StructType: MONSTER_STRUCT_TYPE },
-        });
-  
-        const MonsterObjectId = objectList.data[0]?.data?.objectId;
-  
-        if (MonsterObjectId) {
-          localStorage.setItem('MonsterObjectId', MonsterObjectId);
-          // 确保加载怪物详细信息
-          loadMonsterDetails(MonsterObjectId);
-        } else {
-          // 如果没有怪物，则创建新的怪物
-          const createdMonster = await create_monster_low({
-            signAndExecute,
-            counterPackageId,
-            creater: account.address,
-          });
-  
-          // 假设 create_monster_low 返回新创建的怪物 ID
-          if (createdMonster) {
-            localStorage.setItem('MonsterObjectId', createdMonster);
-            loadMonsterDetails(createdMonster);
-          }
-        }
-      } catch (error) {
-        console.error('调用合约函数时出错:', error);
-        toast.error('生成怪物失败！');
-      }
-    };
-  
-    checkAndCreateMonster();
-  }, [account, signAndExecute, counterPackageId]);
 
   const defaultOptions = {
     showType: true,
@@ -103,6 +71,79 @@ const Game: React.FC = () => {
     showDisplay: true,
   };
 
+  let isCheckingMonster = false; // 防止重复调用
+
+  const checkMonster = async () => {
+    if (!account || isCheckingMonster) return;
+    isCheckingMonster = true;
+  
+    try {
+      console.log('检查怪物开始');
+      const objectList = await client.getOwnedObjects({
+        owner: account.address,
+        filter: { StructType: MONSTER_STRUCT_TYPE },
+      });
+  
+      console.log('获取的怪物对象列表:', objectList);
+  
+      const MonsterObjectId = objectList.data[0]?.data?.objectId;
+  
+      if (MonsterObjectId) {
+        console.log('检测到怪物对象:', MonsterObjectId);
+        localStorage.setItem('MonsterObjectId', MonsterObjectId);
+        const result = await loadMonsterDetails(MonsterObjectId);
+  
+        if (!result) {
+          console.log('怪物详情加载失败，尝试重新创建怪物');
+          await createNewMonster();
+        }
+      } else {
+        console.log('未检测到怪物，尝试创建新怪物');
+        await createNewMonster();
+      }
+    } catch (error) {
+      console.error('检查怪物时出错:', error);
+      toast.error('检查怪物失败，请稍后再试！');
+    } finally {
+      isCheckingMonster = false; // 重置状态
+    }
+  };
+  
+  const createNewMonster = async () => {
+    if (!account) return;
+  
+    if (!isCreateMonster) {
+      toast.warning('怪物创建操作正在进行，请稍后重试！');
+      return;
+    }
+  
+    setIsCreateMonster(false); // 防止重复调用
+  
+    try {
+      setMonsterData({}); // 清空怪物状态
+      localStorage.removeItem('MonsterObjectId');
+  
+      const createdMonster = await create_monster_low({
+        signAndExecute,
+        counterPackageId,
+        creater: account.address,
+      });
+  
+      if (createdMonster) {
+        console.log('新怪物创建成功:', createdMonster);
+        localStorage.setItem('MonsterObjectId', createdMonster);
+        await loadMonsterDetails(createdMonster);
+      } else {
+        toast.success('正在创建怪物！');
+      }
+    } catch (error) {
+      console.error('创建怪物时出错:', error);
+      toast.error('创建怪物失败，请稍后再试！');
+    } finally {
+      setIsCreateMonster(true); // 重置状态
+    }
+  };
+  
   const gameRef = useRef<HTMLDivElement>(null); 
   const monstersDataRef = useRef(monstersData);
   const playerDataRef = useRef(playerData);
@@ -147,23 +188,33 @@ const Game: React.FC = () => {
       }
     }
   
-    function create(this: Phaser.Scene) {
+    function create(this: Phaser.Scene) { 
       this.add.image(0, 0, 'background').setOrigin(0, 0).setDisplaySize(window.innerWidth, window.innerHeight);
       this.character = this.physics.add.sprite(100, 700, 'character').setScale(4).setCollideWorldBounds(true);
       
       const storedMonsterObjectId = localStorage.getItem('MonsterObjectId');
-      if (storedMonsterObjectId) {
+      const currentMonstersData = monstersDataRef.current;
+
+      if (storedMonsterObjectId && currentMonstersData && !this.monster) {
+
         loadMonsterDetails(storedMonsterObjectId);
+
         this.monster = this.physics.add.sprite(1200, 750, 'monster').setScale(2).setCollideWorldBounds(true);
+
         this.monsterNameText = this.add.text(1200, 790, '', { fontSize: '16px', color: '#fff' }).setOrigin(0.5, 0.5);
         this.monsterHpText = this.add.text(1200, 790, '', { fontSize: '16px', color: '#fff' }).setOrigin(0.5, 0.5);
-      } else if(!storedMonsterObjectId) {
+
+      } else if(!storedMonsterObjectId && this.monster) {
+
         this.monster.destroy();
         this.monster = null; 
+
         this.monsterNameText.destroy();
         this.monsterNameText = null;
+
         this.monsterHpText.destroy();
         this.monsterHpText = null;
+        
       }
 
       this.cursors = this.input.keyboard!.createCursorKeys();
@@ -179,25 +230,31 @@ const Game: React.FC = () => {
     }
     
     async function update(this: Phaser.Scene) {
-      const storedMonsterObjectId = localStorage.getItem('MonsterObjectId');
-      if (storedMonsterObjectId && !this.monster) {
-        this.monster = this.physics.add.sprite(1200, 750, 'monster').setScale(2);
-        const currentMonstersData = monstersDataRef.current;
 
-        if (currentMonstersData) {
-          this.monsterNameText.setText(currentMonstersData.monster_name);
-          this.monsterHpText.setText(`HP: ${currentMonstersData.monster_hp}`);
-        }
+      const storedMonsterObjectId = localStorage.getItem('MonsterObjectId');
+      const currentMonstersData = monstersDataRef.current;
+
+      if (storedMonsterObjectId && currentMonstersData && !this.monster) {
+
+        loadMonsterDetails(storedMonsterObjectId);
+
+        this.monster = this.physics.add.sprite(1200, 750, 'monster').setScale(2);
+        this.monsterNameText = this.add.text(1200, 790, '', { fontSize: '16px', color: '#fff' }).setOrigin(0.5, 0.5);
+        this.monsterHpText = this.add.text(1200, 790, '', { fontSize: '16px', color: '#fff' }).setOrigin(0.5, 0.5);
+
       } else if (!storedMonsterObjectId && this.monster) {
+
         this.monster.destroy();
         this.monster = null; 
         this.monsterNameText.destroy();
         this.monsterNameText = null;
         this.monsterHpText.destroy();
         this.monsterHpText = null;
+
       }
     
       if (this.monster) {
+
         const currentMonstersData = monstersDataRef.current;
 
         const movement = Math.sin(this.time.now / 700) * 1.5;
@@ -205,10 +262,12 @@ const Game: React.FC = () => {
 
         this.monster.setFlipX(movement <= 0);
         if (currentMonstersData) {
+
           this.monsterNameText.setText(currentMonstersData.monster_name);
           this.monsterHpText.setText(`HP: ${currentMonstersData.monster_hp}`);
           this.monsterNameText.setPosition(this.monster.x, this.monster.y - 40);
           this.monsterHpText.setPosition(this.monster.x, this.monster.y - 50);
+
         }
       }
     
@@ -287,9 +346,8 @@ const Game: React.FC = () => {
           role: RoleObjectId,
           counterPackageId,
           onSuccess: () => {
-            // 攻击成功后清除 localStorage 并刷新数据
-            localStorage.removeItem('MonsterObjectId');
-            fetchMonsterData(); // 重新获取怪物数据
+            checkMonster(); 
+            loadMonsterDetails(MonsterObjectId);
           },
           onError: (error) => {
             console.error('攻击失败:', error);
@@ -321,6 +379,7 @@ const Game: React.FC = () => {
       });
 
       const RoleObjectId = objectList.data[0]?.data?.objectId;
+      
       if (!RoleObjectId) {
         setError('未找到角色信息');
         setPlayerData({});
@@ -350,8 +409,6 @@ const Game: React.FC = () => {
               : [],
           });
 
-          // 直接调用 fetchMonsterData
-          fetchMonsterData();
         }
       } else {
         setError('角色数据不正确');
@@ -362,61 +419,32 @@ const Game: React.FC = () => {
     }
   };
 
-  const fetchMonsterData = async () => {
-    if (!account) {
-      setError('未找到账户信息');
-      return;
-    }
-  
-    try {
-      const objectList = await client.getOwnedObjects({
-        owner: account.address,
-        filter: { StructType: MONSTER_STRUCT_TYPE },
-      });
-  
-      const MonsterObjectId = objectList.data[0]?.data?.objectId;
-  
-      // 检查本地存储的MonsterObjectId是否仍然存在于链上
-      if (MonsterObjectId) {
-        loadMonsterDetails(MonsterObjectId);
-      } else {
-        // 如果链上不存在怪物对象，清除本地存储
-        localStorage.removeItem('MonsterObjectId');
-        setMonsterData({}); // 清空怪物数据
-      }
-    } catch (err) {
-      console.error(err);
-      setError('获取怪物数据失败');
-      // 如果获取失败，也清除本地存储
-      localStorage.removeItem('MonsterObjectId');
-    }
-  };
 
-  const loadMonsterDetails = async (monsterId: any) => {
+  const loadMonsterDetails = async (monsterId: string): Promise<boolean> => {
     try {
-      const result = await client.getObject({ 
+      console.log('加载怪物详情:', monsterId);
+      const result = await client.getObject({
         id: monsterId,
         options: defaultOptions,
       });
-
+  
       if (result?.data?.content?.dataType === 'moveObject') {
-        const fields = result?.data?.content?.fields;
-        if (fields) {
-          const fieldsObj = fields as { [key: string]: any };
-          setMonsterData({
-            monster_id: fieldsObj["id"],
-            monster_name: fieldsObj["name"],
-            monster_hp: fieldsObj["monster_hp"],
-            monster_attack: fieldsObj["monster_attack"],
-          });
-        } else {
-          console.log('未找到怪物数据中的字段'); 
-        }
+        const fields = result.data.content.fields as { [key: string]: any };
+        setMonsterData({
+          monster_id: fields.id,
+          monster_name: fields.name,
+          monster_hp: fields.monster_hp,
+          monster_attack: fields.monster_attack,
+        });
+        console.log('怪物详情加载成功:', fields);
+        return true;
       } else {
-        console.log('怪物数据不是 moveObject 类型');
+        console.error('怪物数据类型错误');
+        return false;
       }
-    } catch (err) {
-      console.error('获取怪物详细信息失败:', err);
+    } catch (error) {
+      console.error('加载怪物详情失败:', error);
+      return false;
     }
   };
 
@@ -457,11 +485,11 @@ const Game: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchMonsterData();
-
+    checkMonster();
     const intervalId = setInterval(() => {
-      fetchMonsterData();
-    }, 3000);
+
+      checkMonster();
+    }, 10000);
 
     return () => clearInterval(intervalId);
   }, [account]);
@@ -480,7 +508,7 @@ const Game: React.FC = () => {
     setTasks([{
       name: "Kill the wolves",
       description: "任务目标：击杀一只恶狼",
-      reward: "经验：10\n货币：3 Soul\n武器：smart_sword",
+      reward: "经验：40\n货币：3 Soul\n武器：smart_sword",
       action: async () => {
         if (!RoleObjectId) {
           toast.error("未找到角色信息！");
@@ -532,6 +560,144 @@ const Game: React.FC = () => {
     }]);
   }, [RoleObjectId, signAndExecute]);
 
+
+
+  // 升级函数
+  const upgrade_level = async () => {
+    if (!RoleObjectId) {
+      toast.error("未找到角色信息！");
+      return;
+    }
+    try {
+      await up_level({
+        signAndExecute,
+        role: RoleObjectId,
+        counterPackageId,
+        onSuccess(result) {
+          console.log(result, '++++升级成功++++');
+          fetchRoleData(); // 重新获取角色数据以更新状态
+        },
+        onError(error) {
+          console.error(error, '++++升级失败++++');
+          toast.error("角色升级失败，请稍后再试！");
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      toast.error("角色升级失败，请稍后再试！");
+    }
+  };
+
+
+  // 任务渲染函数，处理 reward 字符串中的换行
+  const renderReward = (reward: string) => {
+    return reward.split('\n').map((line, index) => (
+      <span key={index}>{line}<br /></span>
+    ));
+  };
+
+// ===================== 签到 ===================
+  // 打开模态框
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // 关闭模态框
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // 调用合约的签到函数
+  const handleSignIn = async () => {
+    try {
+      if(!account) { return };
+
+      const roleObjectList = await client.getOwnedObjects({
+        owner: account.address,
+        filter: { StructType: ROLE_STRUCT_TYPE },
+      });
+  
+      const RoleObjectId = roleObjectList.data[0]?.data?.objectId;
+
+      await sign_in({         
+        signAndExecute,
+        role: RoleObjectId,
+        coin_pool: COIN_POOL,
+        counterPackageId: TESTNET_COUNTER_PACKAGE_ID,
+      });
+      closeModal();
+    } catch (error) {
+      console.error('签到失败:', error);
+      toast.error('签到失败，请稍后再试！');
+    }
+  };
+
+// ===================== 背包 ===================
+
+  const checkSword = async () => {
+    if (!account) {
+      setError('未找到账户信息');
+      return;
+    }
+
+    try {
+      const EPObjectList = await client.getOwnedObjects({
+        owner: account.address,
+        filter: { StructType: SWORD_STRUCT_TYPE },
+      });
+
+      const SwordObjectId = EPObjectList.data[0]?.data?.objectId || null;
+
+      if (!SwordObjectId) {
+        setSwordData({});
+        return;
+      }
+
+      setSwordObjectId(SwordObjectId); 
+
+      const result = await client.getObject({ id: SwordObjectId, options: defaultOptions });
+      if (result?.data?.content?.dataType === 'moveObject') {
+        const fields = result?.data?.content?.fields;
+        if (fields) {
+          const fieldsObj = fields as { [key: string]: any };
+          setSwordData({
+            url: fieldsObj["url"],
+          });
+          console.log(fieldsObj);
+        }
+      }
+
+    } catch (error) {
+      console.error('检查装备时出错:', error);
+    }
+  };
+
+  // 在组件挂载时检查装备
+  useEffect(() => {
+    checkSword();
+    const intervalId = setInterval(() => {
+      checkSword();
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [account]);
+
+  // 示例背包物品数据
+  const backpackItems = [
+    swordData?.url ? { id: 1, name: "Sword", image: swordData.url } : null,
+    null, null, null, null, null, null, null, null, // 剩余空格子
+  ];
+
+  // 打开/关闭背包
+  const toggleBackpack = () => {
+    setIsBackpackOpen(!isBackpackOpen);
+  };
+
+  // 点击物品时
+  const handleItemClick = (item: any) => {
+    setSelectedItem(item);
+  };
+
   // 新增装备函数
   const put_on = async () => {
     if (!account) {
@@ -570,54 +736,51 @@ const Game: React.FC = () => {
         recipient: recipient,
         counterPackageId,
       });
+      toast.success(`${selectedItem.name} 正在卸下`);
     } catch (err) {
       console.error(err);
     }
   };
 
-  // 升级函数
-  const upgrade_level = async () => {
-    if (!RoleObjectId) {
-      toast.error("未找到角色信息！");
-      return;
-    }
-    try {
-      await up_level({
-        signAndExecute,
-        role: RoleObjectId,
-        counterPackageId,
-        onSuccess(result) {
-          console.log(result, '++++升级成功++++');
-          fetchRoleData(); // 重新获取角色数据以更新状态
-        },
-        onError(error) {
-          console.error(error, '++++升级失败++++');
-          toast.error("角色升级失败，请稍后再试！");
-        },
-      });
-    } catch (err) {
-      console.error(err);
-      toast.error("角色升级失败，请稍后再试！");
+  // 背包模态框中的装备和卸下逻辑
+  const handleEquip = () => {
+    if (selectedItem) {
+      put_on(); 
+      toast.success(`${selectedItem.name} 正在装备`);
+      setSelectedItem(null); // 清空选中状态
     }
   };
 
-
-  // 任务渲染函数，处理 reward 字符串中的换行
-  const renderReward = (reward: string) => {
-    return reward.split('\n').map((line, index) => (
-      <span key={index}>{line}<br /></span>
-    ));
-  };
+// ============================================
 
   const handleGoHome = () => navigate('/');
 
   return (
     <div className="game-container">
       <div className="button-container">
+        <FaCalendar className="button-icon" onClick={ openModal } title="qiandao" />
         <FaUserAlt className="button-icon" onClick={handleCharacterIconClick} title="Show Character Stats" />
+        <FaBriefcase className="button-icon" onClick={toggleBackpack} title="Open Backpack"/>
         <FaTasks className="button-icon" onClick={() => setIsTaskModalOpen(!isTaskModalOpen)} title="Show Tasks" />
         <FaHome className="button-icon" onClick={handleGoHome} title="Back to Home" />
+
       </div>
+
+      {/* 签到模态框 */}
+      {isModalOpen && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <h2>签到</h2>
+            <p>点击按钮完成签到。</p>
+            <button onClick={handleSignIn} className="sign-in-button">
+              签到
+            </button>
+            <button onClick={closeModal} className="close-button">
+              关闭
+            </button>
+          </div>
+        </div>
+      )}
 
       <div ref={gameRef} className="phaser-game-container"></div>
 
@@ -643,13 +806,45 @@ const Game: React.FC = () => {
                     : "None"}
                 </li>
                 <li>
-                  <button onClick={put_on}>装备</button>
                   <button onClick={take_off}>卸下</button>
                   <button onClick={upgrade_level}>升级</button>
                 </li>
               </ul>
             )}
             <button onClick={() => setIsCharacterModalOpen(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {isBackpackOpen && (
+        <div className="backpack-modal">
+          <div className="modal-content">
+            <h2>背包</h2>
+            <div className="grid-container">
+              {backpackItems.map((item, index) => (
+                <div
+                  key={index}
+                  className="grid-item"
+                  onClick={() => item && handleItemClick(item)} // 如果格子有物品，则可点击
+                  style={{
+                    border: item ? "2px solid #ccc" : "2px dashed #aaa",
+                    cursor: item ? "pointer" : "default",
+                  }}
+                >
+                  {item ? <img src={item.image} alt={item.name} /> : null}
+                </div>
+              ))}
+            </div>
+            {/* 如果有选中物品，显示装备和卸下按钮 */}
+            {selectedItem && (
+              <div className="item-actions">
+                <p>当前选中：{selectedItem.name}</p>
+                <button onClick={handleEquip}>装备</button>
+              </div>
+            )}
+            <button className="close-button" onClick={toggleBackpack}>
+              关闭
+            </button>
           </div>
         </div>
       )}
