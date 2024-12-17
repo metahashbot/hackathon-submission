@@ -50,6 +50,7 @@ const Game: React.FC = () => {
   const [tasks, setTasks] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [RoleObjectId, setRoleObjectId] = useState<string | null>(null);
+  const [taskStage, setTaskStage] = useState("notStarted");
   const { mutate: signAndExecute } = useSignAndExecuteTransaction();
   const [swordObjectId, setSwordObjectId] = useState<string | null>(null); // 保存装备状态
   const [swordData, setSwordData] = useState<any>({});
@@ -449,40 +450,7 @@ const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的�
   };
 
   // 新增检测任务的函数
-  const checkTaskStatus = async () => {
-    if (!account) {
-      setError('未找到账户信息');
-      return;
-    }
 
-    try {
-      const roleObjectList = await client.getOwnedObjects({
-        owner: account.address,
-        filter: { StructType: ROLE_STRUCT_TYPE },
-      });
-  
-      const RoleObjectId = roleObjectList.data[0]?.data?.objectId;
-
-      if (!RoleObjectId) {
-        console.error('未找到角色的对象 ID');
-        return;
-      }
-      await check_task_low({
-        signAndExecute,
-        role: RoleObjectId,
-        counterPackageId,
-        onSuccess(result) {
-          console.log(result, '++++success++++')
-        }, 
-        onError(error) {
-          console.log(error, '++++error++++')
-        },
-      });
-    } catch (error) {
-      console.error('检测任务状态时出错:', error);
-      setError('检测任务状态失败，请稍后再试！');
-    }
-  };
 
   useEffect(() => {
     checkMonster();
@@ -526,10 +494,48 @@ const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的�
               console.log(error, '++++error++++')
             },
           });
+          setTaskStage("inProgress");
           toast.success("正在接取任务！");
         } catch (err) {
           toast.error("任务接取失败，请稍后再试！");
           console.error(err);
+        }
+      },
+
+      // 新增检测任务的函数
+      checkStatus: async () => {
+        if (!account) {
+          setError('未找到账户信息');
+          return;
+        }
+    
+        try {
+          const roleObjectList = await client.getOwnedObjects({
+            owner: account.address,
+            filter: { StructType: ROLE_STRUCT_TYPE },
+          });
+      
+          const RoleObjectId = roleObjectList.data[0]?.data?.objectId;
+    
+          if (!RoleObjectId) {
+            console.error('未找到角色的对象 ID');
+            return;
+          }
+          await check_task_low({
+            signAndExecute,
+            role: RoleObjectId,
+            counterPackageId,
+            onSuccess(result) {
+              console.log(result, '++++success++++')
+            }, 
+            onError(error) {
+              console.log(error, '++++error++++')
+            },
+          });
+          setTaskStage("completed");
+        } catch (error) {
+          console.error('检测任务状态时出错:', error);
+          setError('检测任务状态失败，请稍后再试！');
         }
       },
       // 新增领取奖励的函数
@@ -552,6 +558,7 @@ const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的�
               console.log(error, '++++error++++')
             },
           });
+          setTaskStage("notStarted");
         } catch (err) {
           toast.error("领取奖励失败，请稍后再试！");
           console.error(err);
@@ -631,6 +638,10 @@ const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的�
       toast.error('签到失败，请稍后再试！');
     }
   };
+
+// ===================== 任务系统 ===============
+
+
 
 // ===================== 背包 ===================
 
@@ -860,9 +871,9 @@ const [selectedItem, setSelectedItem] = useState<any>(null); // 记录选中的�
                   <h3>{task.name}</h3>
                   <p>{task.description}</p>
                   <div>{renderReward(task.reward)}</div>
-                  <button onClick={task.action}>接取任务</button>
-                  <button onClick={checkTaskStatus}>检测任务</button> {/* 新增检测任务按钮 */}
-                  <button onClick={task.claimReward}>领取奖励</button> {/* 新增领取奖励按钮 */}
+                  {taskStage === "notStarted" && (<button onClick={task.action}>接取任务</button>)}
+                  {taskStage === "inProgress" && (<button onClick={task.checkStatus}>检测任务</button>)}
+                  {taskStage === "completed" && (<button onClick={task.claimReward}>领取奖励</button>)}
                 </div>
               ))}
             </div>
