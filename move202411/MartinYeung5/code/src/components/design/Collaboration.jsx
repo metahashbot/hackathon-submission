@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { curve1, curve2 } from "../../assets";
+=======
 import { curve1, curve2 } from "../../assets/index.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 export const RightCurve = () => {
   return (

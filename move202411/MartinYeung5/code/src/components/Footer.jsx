@@ -1,6 +1,11 @@
 import React from "react";
+<<<<<<< HEAD
+import Section from "./Section";
+import { socials } from "../constants";
+=======
 import Section from "./Section.jsx";
 import { socials } from "../constants/index.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Footer = () => {
   return (

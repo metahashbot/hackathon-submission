@@ -7,4 +7,3 @@
 - 楊景輝 github: MartinYeung5
 > 自我介绍&技术栈: full-stack developer, 喜歡學習，專注於區塊鏈技術研究及開發創新應用
 
-https://docs.google.com/presentation/d/1JraMIE1HsOcW9-8-qM9SUQCFWDCRlzAQoa69DBCgFb4/edit#slide=id.g31c7f085108_0_0

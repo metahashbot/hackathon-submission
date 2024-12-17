@@ -1,6 +1,10 @@
 import { useCurrentAccount, useSuiClientQuery, useSignAndExecuteTransactionBlock } from "@mysten/dapp-kit";
 import { TransactionBlock } from '@mysten/sui.js/transactions';
+<<<<<<< HEAD
+import Button from "./Button";
+=======
 import Button from "./Button.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 import { useState } from 'react';
 

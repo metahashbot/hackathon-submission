@@ -1,8 +1,16 @@
+<<<<<<< HEAD
+import { check } from "../assets";
+import { collabApps, collabContent, collabText } from "../constants";
+import Button from "./Button";
+import Section from "./Section";
+import { LeftCurve, RightCurve } from "./design/Collaboration";
+=======
 import { check } from "../assets/index.js";
 import { collabApps, collabContent, collabText } from "../constants/index.js";
 import Button from "./Button.jsx";
 import Section from "./Section.jsx";
 import { LeftCurve, RightCurve } from "./design/Collaboration.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Collaboration = () => {
   return (

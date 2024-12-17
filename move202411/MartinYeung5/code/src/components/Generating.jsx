@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+import { loading } from "../assets";
+=======
 import { loading } from "../assets/index.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Generating = ({ className }) => {
   return (

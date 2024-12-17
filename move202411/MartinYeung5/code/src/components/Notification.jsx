@@ -1,5 +1,10 @@
+<<<<<<< HEAD
+import { notification1 } from "../assets";
+import { notificationImages } from "../constants";
+=======
 import { notification1 } from "../assets/index.js";
 import { notificationImages } from "../constants/index.js";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const Notification = ({ className, title }) => {
   return (

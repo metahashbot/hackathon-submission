@@ -1,6 +1,12 @@
+<<<<<<< HEAD
+import { check } from "../assets";
+import { pricing } from "../constants";
+import Button from "./Button";
+=======
 import { check } from "../assets/index.js";
 import { pricing } from "../constants/index.js";
 import Button from "./Button.jsx";
+>>>>>>> b65e2d9f90adeb6abb94f4b2feac94b03cee3080
 
 const PricingList = () => {
   return (
