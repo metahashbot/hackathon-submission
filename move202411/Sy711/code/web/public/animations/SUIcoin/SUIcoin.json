@@ -1,0 +1,58 @@
+{
+  "sprites": [
+    {
+      "fileName": "suicoin1.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 0,
+      "y": 0
+    },
+    {
+      "fileName": "suicoin2.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 1184,
+      "y": 0
+    },
+    {
+      "fileName": "suicoin3.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 2368,
+      "y": 0
+    },
+    {
+      "fileName": "suicoin4.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 0,
+      "y": 1184
+    },
+    {
+      "fileName": "suicoin5.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 1184,
+      "y": 1184
+    },
+    {
+      "fileName": "suicoin6.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 2368,
+      "y": 1184
+    },
+    {
+      "fileName": "suicoin7.png",
+      "width": 1184,
+      "height": 1184,
+      "x": 0,
+      "y": 2368
+    }
+  ],
+  "packMode": "grid",
+  "padding": 0,
+  "backgroundColor": "rgba(0, 0, 0, 0)",
+  "spriteSheetWidth": 3552,
+  "spriteSheetHeight": 3552
+}

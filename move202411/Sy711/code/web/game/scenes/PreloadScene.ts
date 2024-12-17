@@ -1,5 +1,6 @@
-import Phaser from 'phaser';
+import * as Phaser from 'phaser';
 import { useGameStore } from '../store/gameStore';
+import { AUDIO_CONFIG, AudioManager } from '../managers/AudioManager';
 
 export interface PageInfo {
   page: number;
@@ -10,7 +11,8 @@ export class PreloadScene extends Phaser.Scene {
   private currentImageIndex = 0;
   private readonly imageKeys = ['fud00', 'fud01', 'fud02', 'fud03'];
   private currentImage?: Phaser.GameObjects.Image;
-  private bgMusic?: Phaser.Sound.BaseSound;
+  private audioManager?: AudioManager;
+
 
   constructor() {
     super({ key: 'PreloadScene' });
@@ -19,7 +21,7 @@ export class PreloadScene extends Phaser.Scene {
   init() {
     this.load.on('complete', () => {
       console.log('Scene assets loaded completely');
-      this.startAudio();
+      useGameStore.getState().setGameState('preload');
     });
   }
 
@@ -30,53 +32,44 @@ export class PreloadScene extends Phaser.Scene {
     });
   }
 
-  preload() {
-    this.load.audio('preloadscene', '/music/preloadscene.mp3');
-    
+  preload() {    
     this.load.image('fud00', '/images/fud00.jpg');
     this.load.image('fud01', '/images/fud01.jpg'); 
     this.load.image('fud02', '/images/fud02.jpg');
     this.load.image('fud03', '/images/fud03.jpg');
-  }
-
-  private startAudio() {
-    try {
-      this.bgMusic = this.sound.add('preloadscene', {
-        loop: true,
-        volume: 1
-      });
-
-      if (this.sound.locked) {
-        console.log('Audio system is locked, waiting for unlock');
-        this.sound.once('unlocked', () => {
-          console.log('Audio system unlocked');
-          this.bgMusic?.play();
-        });
-      } else {
-        console.log('Playing audio');
-        this.bgMusic.play();
-      }
-    } catch (error) {
-      console.error('Error starting audio:', error);
-    }
+    this.audioManager = new AudioManager(this);
+    this.audioManager.preload();
   }
 
   create() {
+    this.audioManager?.init();
+    // Play music and store the reference to stop it later
+    this.audioManager?.playMusic(AUDIO_CONFIG.MUSIC.BATTLE.key, true, 0.5, 500);
+    // Stop music when transitioning to another scene
+    this.events.on('shutdown', () => {
+      this.audioManager?.stopAllMusic();
+    });
     this.showCurrentImage();
     this.updatePageInfo();
   }
 
   // 供 React 调用的公共方法
   public updateFromReact(data: unknown) {
-
     const dataObj = data as { data: string };
-    if (dataObj.data === 'next') {
-      this.showNextImage();
-    } else if (dataObj.data === 'prev') {
-      this.showPreviousImage();
-    } else {
-      console.warn('Unknown command:', data);
+    switch (dataObj.data) {
+      case 'next':
+        this.showNextImage();
+        break;
+      case 'prev':
+        this.showPreviousImage();
+        break;
+      case 'start':
+        this.scene.start('MainScene');
+        break;
+      default:
+        console.warn('Unknown command:', data);
     }
+    this.audioManager?.playSfx(AUDIO_CONFIG.SFX.CLICK.key);
   }
 
   private showCurrentImage() {

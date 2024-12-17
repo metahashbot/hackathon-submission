@@ -11,7 +11,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SuiClientProvider networks={networkConfig} defaultNetwork={network}>
-        <WalletProvider>
+        <WalletProvider stashedWallet={
+          {
+            name: 'iyada',
+          }
+        }>
           {children}
         </WalletProvider>
       </SuiClientProvider>

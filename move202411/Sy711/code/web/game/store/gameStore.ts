@@ -8,6 +8,8 @@ interface GameState {
   setGameInstance: (game: Phaser.Game) => void;
   pageInfo: PageInfo;
   setPageInfo: (pageInfo: PageInfo) => void;
+  gameState: 'preload' | 'started' | 'init' | 'paused' | 'unstarted'
+  setGameState: (gameState: 'preload' | 'started' | 'init' | 'paused' | 'unstarted') => void;
 }
 
 export const useGameStore = create<GameState>((set) => ({
@@ -20,4 +22,6 @@ export const useGameStore = create<GameState>((set) => ({
   setScore: (score) => set({ score }),
   setGameInstance: (game) => set({ gameInstance: game }),
   setPageInfo: (pageInfo) => set({ pageInfo }),
+  gameState: 'unstarted',
+  setGameState: (gameState) => set({ gameState }),
 })); 
