@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import LOGO from "../../../public/img2.png";
+import LOGO from "../../../public/rbc.png";
 
 export default function LandingPage() {
   return (
@@ -9,7 +9,7 @@ export default function LandingPage() {
       <div className="flex h-full justify-end">
         <div className="h-full">
           <Image
-            src="/img2.png"
+            src="/rbc.png"
             alt="Decorative blood vessels"
             width={LOGO.width}
             height={LOGO.height}

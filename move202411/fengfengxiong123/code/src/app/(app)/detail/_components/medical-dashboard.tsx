@@ -1,3 +1,5 @@
 export function MedicalDashboard() {
-  return <div></div>;
+  return <div>
+    <MedicalDashboard/>
+  </div>;
 }

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build || true",
+    "build": "next build",
     "check": "next lint && tsc --noEmit",
     "dev": "next dev",
     "lint": "next lint",
@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@mysten/bcs": "^1.1.1",
-    "@mysten/dapp-kit": "^0.14.43",
-    "@mysten/sui": "^1.17.0",
+    "@mysten/dapp-kit": "^0.14.39",
+    "@mysten/sui": "^1.16.0",
     "@mysten/sui.js": "^0.54.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@suiet/wallet-kit": "^0.3.3",

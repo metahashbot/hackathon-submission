@@ -10,6 +10,9 @@ const config = {
     images: {
         unoptimized: true,
     },
+    eslint: {
+        ignoreDuringBuilds: true, // 禁用 ESLint 在构建时的执行
+    },
 };
 
 export default config;

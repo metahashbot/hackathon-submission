@@ -11,7 +11,7 @@ export function ConnectBtn() {
     <ConnectButton
       className="flex items-center justify-center bg-white text-[#0000FF] hover:bg-white/90"
       onConnectSuccess={() => {
-        router.push("/detail");
+        router.push("/");
       }}
     >
       <WalletIcon className="mr-2 h-4 w-4" />

@@ -29,7 +29,6 @@ export function Providers({ children }: ProvidersProps) {
   //用什么网，默认里面就填什么
   return (
     <QueryClientProvider client={queryClient}>
-      
       <SuiClientProvider networks={networks} defaultNetwork="testnet">
         <WalletProvider chains={SupportedChains}>
           {children}
