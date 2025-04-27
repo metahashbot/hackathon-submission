@@ -1,6 +1,7 @@
 ## project
 - 项目名称: EasyBuy
 > 描述: Sui 多链交易解决方案
+> 项目访问地址：https://sui-easy-buy-with-vite.vercel.app
 - 这是一个打通web3和web2链接的大型项目中的一个工具
 - 1.它可以作为一个工具添加到任何NFT资产的购买流程中
 - 2.它可以实时提供一个白名单Tokenlist中的实时汇率
