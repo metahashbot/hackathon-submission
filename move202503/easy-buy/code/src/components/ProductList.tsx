@@ -3,7 +3,7 @@ import ProductItem from './ProductItem';
 import PurchaseModal from './PurchaseModal';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount, useBalance, useDisconnect } from 'wagmi';
-import {useAccountBalance, useWallet as useSuiWallet} from '@suiet/wallet-kit';
+import {useAccountBalance, useWallet as useSuiWallet, ConnectModal } from '@suiet/wallet-kit';
 import { Connection, PublicKey, LAMPORTS_PER_SOL, clusterApiUrl } from '@solana/web3.js';
 import {MIST_PER_SUI} from "@mysten/sui/utils";
 
@@ -118,7 +118,7 @@ declare const window: PhantomWindow;
 const ProductList = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+	const [showSuiWallet, setShowSuiWallet] = useState(false)
   // Ethereum wallet state
   const { address: ethAddress, isConnected: isEthConnected } = useAccount();
   const { data: ethBalance } = useBalance({ address: ethAddress });
@@ -269,12 +269,20 @@ const ProductList = () => {
 				      </div>
 			      ) : (
 				      <div className="min-[100px] flex justify-center items-center w-full">
-					      <button
-						      onClick={() => suiWallet.select && suiWallet.select('Suiet')}
-						      className="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 font-medium shadow-sm hover:shadow transform hover:scale-[1.02] active:scale-[0.98] connect-btn"
+					      <ConnectModal
+						      open={showSuiWallet}
+						      onOpenChange={(open: any) => setShowSuiWallet(open)}
 					      >
-						      Connect
-					      </button>
+						      <button
+							      // onClick={() => suiWallet.select && suiWallet.select('Suiet')}
+							      onClick={() => {
+
+							      }}
+							      className="px-4 py-2 bg-gradient-to-r from-teal-500 to-teal-600 text-white rounded-lg hover:from-teal-600 hover:to-teal-700 transition-all duration-300 font-medium shadow-sm hover:shadow transform hover:scale-[1.02] active:scale-[0.98] connect-btn"
+						      >
+							      Connect
+						      </button>
+					      </ConnectModal>
 				      </div>
 			      )}
 		      </div>
